@@ -13,7 +13,7 @@ char *geterrmsg(int errcode);
 int _readdir(char **dirs, char **opts)
 {
 DIR *dir;						/* Structure to the directory */
-char bufmsg[128];				/* Buffer for messages*/
+char bufmsg1[128], bufmsg2[128];/* Buffer for messages*/
 char dirprnctrl, fileprnctrl;	/* Colflow when print directory name & content */
 
 	(void)opts;
@@ -30,9 +30,9 @@ char dirprnctrl, fileprnctrl;	/* Colflow when print directory name & content */
 		dir = opendir(*dirs);
 		if (dir == NULL)
 		{
-			sprintf(bufmsg, "ls: %s: ", geterrmsg(errno));
-			fprintf(stderr, bufmsg, *dirs);
-			fprintf(stderr, "%s\n", strerror(errno));
+			sprintf(bufmsg1, "ls: %s", geterrmsg(errno));
+			sprintf(bufmsg2, bufmsg1, *dirs);
+			perror(bufmsg2);
 			return (EXIT_FAILURE);
 		}
 		if (dirprnctrl)
