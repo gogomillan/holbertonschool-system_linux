@@ -12,7 +12,6 @@ char *geterrmsg(int errcode);
 int _readdir(char *dir_name)
 {
 	DIR *dir;            /* Structure pointing to the directory */
-	struct dirent *read; /* Structure pointing to the directory entry */
 	char bufmsg[128];    /* Buffer for messages */
 	char prnctrl;        /* Control flow when print directory content */
 
