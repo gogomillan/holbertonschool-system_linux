@@ -26,12 +26,13 @@ int _readdir(char *dir_name)
 
 	prnctrl = FALSE;
 	while ((read = readdir(dir)) != NULL)
-	{
-		if (prnctrl)
-			printf("  ");
-		printf("%s", read->d_name);
-		prnctrl = TRUE;
-	}
+		if (read->d_type != 4)
+		{
+			if (prnctrl)
+				printf("  ");
+			printf("%s", read->d_name);
+			prnctrl = TRUE;
+		}
 	if (prnctrl)
 		printf("\n");
 
