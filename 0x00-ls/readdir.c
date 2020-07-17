@@ -40,7 +40,7 @@ char dirprnctrl, fileprnctrl;	/* Colflow when print directory name & content */
 
 		fileprnctrl = FALSE;
 		while ((read = readdir(dir)) != NULL)
-			if (strncmp(read->d_name, ".", 1) != 0)
+			if (read->d_name[0] != '.')
 			{
 				if (fileprnctrl)
 					printf("  ");
