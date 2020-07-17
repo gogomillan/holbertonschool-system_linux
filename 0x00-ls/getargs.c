@@ -114,12 +114,14 @@ char *arg;
  */
 int setmemdir(int dir_qty, char ***dir)
 {
+
 	if (dir_qty == 0)
 	{
 		*dir = malloc(2 * sizeof(char *));
 		if (*dir == NULL)
 			return (EXIT_FAILURE);
-		**dir = strdup(".");
+		**dir = malloc(2 * sizeof(char));
+		sprintf(**dir, ".");
 		*(*dir + 1) = NULL;
 	}
 	else
