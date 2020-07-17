@@ -1,13 +1,36 @@
 #include "hls.h"
 
+int imprime(char **buff);
+
 /**
  * main - Main function for my own ls project
  *
+ * @argc: Number of arguments
+ * @argv: The arguments from OS invocation
+ *
  * Return: EXIT_SUCCESS when alright, EXIT_FAILURE in other case
  */
-int main(void)
+int main(int argc, char **argv)
 {
-	if (_readdir(".") != EXIT_SUCCESS)
+char **dir;		/* list of file(s) / directorie(s) */
+char **opt;		/* list of option(s) */
+
+	(void)argc;
+
+	if (getargs(argv, &dir, &opt) != EXIT_SUCCESS)
 		return (EXIT_FAILURE);
+
+	if (_readdir(dir, opt) != EXIT_SUCCESS)
+		return (EXIT_FAILURE);
+
 	return (EXIT_SUCCESS);
+}
+
+int imprime(char **buff)
+{
+	while (*buff != NULL)
+		printf("- %s", *buff++);
+	printf("\n");
+
+	return (0);
 }

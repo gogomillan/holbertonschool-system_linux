@@ -11,7 +11,8 @@
 #include <sys/types.h>
 #include <dirent.h>
 
-int _readdir(char *dir_name);
+int _readdir(char **dirs, char **opts);
+int getargs(char **argv, char ***dirs, char ***opts);
 extern int errno;
 /**
  * dirent - struct for directory entry
