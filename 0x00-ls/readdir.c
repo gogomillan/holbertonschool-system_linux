@@ -26,7 +26,7 @@ int _readdir(char *dir_name)
 
 	prnctrl = FALSE;
 	while ((read = readdir(dir)) != NULL)
-		if (read->d_type != 4)
+		if (strncmp(read->d_name, ".", 1) != 0)
 		{
 			if (prnctrl)
 				printf("  ");
