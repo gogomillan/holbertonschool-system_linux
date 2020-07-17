@@ -1,7 +1,5 @@
 #include "hls.h"
 
-int imprime(char **buff);
-
 /**
  * main - Main function for my own ls project
  *
@@ -24,18 +22,4 @@ char **opt;		/* list of option(s) */
 		return (EXIT_FAILURE);
 
 	return (EXIT_SUCCESS);
-}
-
-/**
- * imprime - prints an array of strings
- * @buff: The double pointer to the array or memory space
- * Return: Always 0
- */
-int imprime(char **buff)
-{
-	while (*buff != NULL)
-		printf("- %s", *buff++);
-	printf("\n");
-
-	return (0);
 }
