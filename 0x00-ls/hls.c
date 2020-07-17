@@ -26,6 +26,11 @@ char **opt;		/* list of option(s) */
 	return (EXIT_SUCCESS);
 }
 
+/**
+ * imprime - prints an array of strings
+ * @buff: The double pointer to the array or memory space
+ * Return: Always 0
+ */
 int imprime(char **buff)
 {
 	while (*buff != NULL)
