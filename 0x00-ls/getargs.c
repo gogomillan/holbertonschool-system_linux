@@ -38,14 +38,14 @@ char *arg, **dir, **opt;		/* For each argument, dirs and opts */
 			dir++, *dir = NULL;
 		}
 		else
-			while (*arg != '\0')
-			{	arg++;
+			while (*arg++ != '\0')
 				if (*arg != '\0')
+				{
 					*opt = malloc(2 * sizeof(char));
 					if (*opt == NULL)
 						return (EXIT_FAILURE);
 					*opt[0] = *arg, *opt[1] = '\0', opt++, *opt = NULL;
-			}
+				}
 		argv++;
 	}
 	return (EXIT_SUCCESS);
