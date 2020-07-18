@@ -21,7 +21,7 @@ char **opt;		/* list of option(s) */
 	if (_readdir(dir, opt) != EXIT_SUCCESS)
 	{
 		releasemem(&dir, &opt);
-		return (EXIT_FAILURE);
+		return (errno);
 	}
 
 	releasemem(&dir, &opt);
