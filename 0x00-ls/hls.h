@@ -7,12 +7,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
-#include <string.h>
 #include <sys/types.h>
 #include <dirent.h>
 
 int _readdir(char **dirs, char **opts);
 int getargs(char **argv, char ***dirs, char ***opts);
+
+int countagrs(char **argv, int *dir_qty, int *opt_qty);
+int setmemdir(int dir_qty, char ***dir);
+int setmemopt(int opt_qty, char ***opt);
+int releasemem(char ***dir, char ***opt);
+
 extern int errno;
 /**
  * dirent - struct for directory entry

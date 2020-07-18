@@ -19,7 +19,11 @@ char **opt;		/* list of option(s) */
 		return (EXIT_FAILURE);
 
 	if (_readdir(dir, opt) != EXIT_SUCCESS)
+	{
+		releasemem(&dir, &opt);
 		return (EXIT_FAILURE);
+	}
 
+	releasemem(&dir, &opt);
 	return (EXIT_SUCCESS);
 }

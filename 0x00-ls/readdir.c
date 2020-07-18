@@ -17,13 +17,13 @@ char bufmsg1[128], bufmsg2[128];/* Buffer for messages*/
 char dirprnctrl, fileprnctrl;	/* Colflow when print directory name & content */
 
 	(void)opts;
+	if (dirs == NULL)
+		return (EXIT_FAILURE);
+
 	if (dirs[1] != NULL)
 		dirprnctrl = TRUE;
 	else
 		dirprnctrl = FALSE;
-
-	if (dirs == NULL)
-		return (EXIT_FAILURE);
 
 	while (*dirs != NULL)
 	{

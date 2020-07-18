@@ -1,10 +1,5 @@
 #include "hls.h"
 
-int countagrs(char **argv, int *dir_qty, int *opt_qty);
-int setmemdir(int dir_qty, char ***dir);
-int setmemopt(int opt_qty, char ***opt);
-int releasemem(char ***dir, char ***opt);
-
 /**
  * getargs - get the arguments / options from argv
  *
@@ -16,11 +11,8 @@ int releasemem(char ***dir, char ***opt);
  */
 int getargs(char **argv, char ***dirs, char ***opts)
 {
-int dir_qty = 0;	/* Number of dirs /files */
-int opt_qty = 0;	/* Number of options */
-char *arg;			/* For each argument */
-char **dir;			/* For the pointed dirs */
-char **opt;			/* For the pointed opts */
+int dir_qty = 0, opt_qty = 0;	/* Number of dirs /files & options */
+char *arg, **dir, **opt;		/* For each argument, dirs and opts */
 
 	/* Counting args get from OS line command */
 	if (countagrs(++argv, &dir_qty, &opt_qty) != EXIT_SUCCESS)
@@ -28,41 +20,31 @@ char **opt;			/* For the pointed opts */
 
 	/* Getting memory to store the files / dirs in argv */
 	if (setmemdir(dir_qty, dirs) != EXIT_SUCCESS)
-	{
-		releasemem(dirs, opts);
+	{	releasemem(dirs, opts);
 		return (EXIT_FAILURE);
 	}
 
 	/* Getting memory to store the options in argv */
 	if (setmemopt(opt_qty, opts) != EXIT_SUCCESS)
-	{
-		releasemem(dirs, opts);
+	{	releasemem(dirs, opts);
 		return (EXIT_FAILURE);
 	}
 
-	dir = *dirs;
-	opt = *opts;
+	dir = *dirs, opt = *opts;
 	while (*argv != NULL)
-	{
-		arg = *argv;
+	{	arg = *argv;
 		if (*arg != '-')
-		{
-			*dir = arg;
-			dir++;
-			*dir = NULL;
+		{	*dir = arg;
+			dir++, *dir = NULL;
 		}
 		else
 			while (*arg != '\0')
-			{
-				arg++;
+			{	arg++;
 				if (*arg != '\0')
 					*opt = malloc(2 * sizeof(char));
 					if (*opt == NULL)
 						return (EXIT_FAILURE);
-					*opt[0] = *arg;
-					*opt[1] = '\0';
-					opt++;
-					*opt = NULL;
+					*opt[0] = *arg, *opt[1] = '\0', opt++, *opt = NULL;
 			}
 		argv++;
 	}
@@ -173,13 +155,13 @@ char **dirs, **opts;
 
 	dirs = *dir;
 	while (*dirs != NULL)
-		free(*dirs);
+		free(*dirs++);
 	free(dirs);
 	*dir = NULL;
 
 	opts = *opt;
 	while (*opts != NULL)
-		free(*opts);
+		free(*opts++);
 	free(opts);
 	opt = NULL;
 
