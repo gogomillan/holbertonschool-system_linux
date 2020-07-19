@@ -47,6 +47,8 @@ char *arg, **dir, **opt;		/* For each argument, dirs and opts */
 			}
 		argv++;
 	}
+	bsort(*dirs, dir_qty);
+
 	return (EXIT_SUCCESS);
 }
 

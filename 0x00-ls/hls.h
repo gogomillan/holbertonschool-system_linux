@@ -18,6 +18,10 @@ int setmemdir(int dir_qty, char ***dir);
 int setmemopt(int opt_qty, char ***opt);
 int releasemem(char ***dir, char ***opt);
 
+int _strcmp(char *s1, char *s2);
+int bsort(char **array, int n_elem);
+void _swap(char **array, int a, int b);
+
 extern int errno;
 /**
  * dirent - struct for directory entry
