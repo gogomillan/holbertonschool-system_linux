@@ -41,12 +41,12 @@ char dirprnctrl, fileprnctrl;	/* Colflow when print directory name & content */
 			printf("%s:\n", *dirs);
 
 		fileprnctrl = FALSE;
-		while ((read = readdir(dir)) != NULL)
-			if (read->d_name[0] != '.')
+		while ((r_entry = readdir(dir)) != NULL)
+			if (r_entry->d_name[0] != '.')
 			{
 				if (fileprnctrl)
 					printf("  ");
-				printf("%s", read->d_name);
+				printf("%s", r_entry->d_name);
 				fileprnctrl = TRUE;
 			}
 		if (fileprnctrl)

@@ -1,3 +1,5 @@
+#include "hls.h"
+
 /**
  * _strcmp - Compare a string to another
  * @s1: The first array
@@ -24,4 +26,24 @@ int i = 0, r = 0;
 	}
 
 	return (r);
+}
+
+/**
+ * _arraycat - Appends two array of strings. It adds arr2 at the end of arr1
+ *
+ * @arr1: Double pointer to the array 1
+ * @arr2: Double pointer to the array 2
+ *
+ * Return: EXIT_SUCCESS if success, EXIT_FAILURE in other cases
+ */
+void _arraycat(char **arr1, char **arr2)
+{
+	while (*arr1 != NULL)
+		arr1++;
+	while (*arr2 != NULL)
+	{
+		*arr1 = *arr2;
+		arr1++, arr2++;
+	}
+	arr1 = NULL;
 }
