@@ -10,20 +10,21 @@
  */
 int main(int argc, char **argv)
 {
-char **dir;		/* list of file(s) / directorie(s) */
+char **fil;		/* list of file(s) */
+char **dir;		/* list of directorie(s) */
 char **opt;		/* list of option(s) */
 
 	(void)argc;
 
-	if (getargs(argv, &dir, &opt) != EXIT_SUCCESS)
+	if (getargs(argv, &fil, &dir, &opt) != EXIT_SUCCESS)
 		return (EXIT_FAILURE);
 
-	if (_readdir(dir, opt) != EXIT_SUCCESS)
+	if (_readdir(fil, dir, opt) != EXIT_SUCCESS)
 	{
-		releasemem(&dir, &opt);
+		releasemem(&fil, &dir, &opt);
 		return (2);
 	}
 
-	releasemem(&dir, &opt);
+	releasemem(&fil, &dir, &opt);
 	return (EXIT_SUCCESS);
 }

@@ -39,33 +39,38 @@ char *arg;
  * setmemdir - Get the memory to create the directory data structure
  *
  * @dir_qty: Qty of files / dirs
- * @dir: Pointer for files/dirs structure
+ * @dir: Pointer for dirs structure
+ * @fil: Pointer for files structure
  * @tmp: Pointer for files/dirs temporary structure
  *
  * Return: EXIT_SUCCESS if process ok, EXIT_FAILURE other cases
  */
-int setmemdir(int dir_qty, char ***dir, char ***tmp)
+int setmemdir(int dir_qty, char ***fil, char ***dir, char ***tmp)
 {
 int iter = 0;
 
-	*tmp = malloc((dir_qty + 1) * sizeof(char *)); /* Temporary for dirs */
+	*tmp = malloc((dir_qty + 1) * sizeof(char *)); /* Temporary for fils */
 	if (*tmp == NULL)
 		return (EXIT_FAILURE);
 	**tmp = NULL;
+	*fil = malloc((dir_qty + 1) * sizeof(char *)); /* Memory for fils */
+	if (*fil == NULL)
+	{	free(*tmp);
+		return (EXIT_FAILURE);
+	}
+	**fil = NULL;
 
 	if (dir_qty == 0)	/* When there are no dirs */
 	{
 		*dir = malloc(2 * sizeof(char *));
 		if (*dir == NULL)
-		{
-			free(*tmp);
+		{	free(*tmp);
+			free(*fil);
 			return (EXIT_FAILURE);
 		}
 		**dir = malloc(2 * sizeof(char));
 		if (**dir == NULL)
-		{
-			free(*tmp);
-			free(*dir);
+		{	free(*tmp), free(*fil), free(*dir);
 			return (EXIT_FAILURE);
 		}
 		sprintf(**dir, ".");
@@ -75,8 +80,7 @@ int iter = 0;
 	{
 		*dir = malloc((dir_qty + 1) * sizeof(char *));
 		if (*dir == NULL)
-		{
-			free(*tmp);
+		{	free(*tmp), free(*fil);
 			return (EXIT_FAILURE);
 		}
 		for (iter = 0; iter < (dir_qty + 1); iter++)
@@ -114,23 +118,30 @@ int setmemopt(int opt_qty, char ***opt)
 /**
  * releasemem - Release memory from dirs and opts to heap
  *
+ * @fil: Pointer to fils memory
  * @dir: Pointer to dirs memory
  * @opt: Pointer to opts memory
  *
  * Return: EXIT_SUCCESS if process ok, EXIT_FAILURE other cases
  */
-int releasemem(char ***dir, char ***opt)
+int releasemem(char ***fil, char ***dir, char ***opt)
 {
 char **dirs, **opts;
 
+	free(*fil);
+	*fil = NULL;
+
 	dirs = *dir;	/* Realease memory from dirs array */
-	if (**dirs == '.' && *(dirs + 1) == NULL)
-		while (*dirs != NULL)
-			free(*dirs++);	/* Only if it didn't have dirs args */
+	if (*dirs != NULL)
+	{
+		if (**dirs == '.' && *(dirs + 1) == NULL)
+			while (*dirs != NULL)
+				free(*dirs++);	/* Only if it didn't have dirs args */
+	}
 	free(*dir);
 	*dir = NULL;
 
-	opts = *opt;	/* Release memry from options array */
+	opts = *opt;	/* Release memory from options array */
 	while (*opts != NULL)
 		free(*opts++);		/* For every single option */
 	free(*opt);
@@ -140,20 +151,18 @@ char **dirs, **opts;
 }
 
 /**
- * _isdir - Check a path to verify if directory
+ * _isdir - Check a path to verify if directory or other
  *
  * @path: The path as a string
  *
- * Return: EXIT_SUCCESS if is a dir or EXIT_FAILURE other cases
+ * Return: Type of file or -1 other cases
  */
 int _isdir(char *path)
 {
 struct stat sb;
 
 	if (stat(path, &sb) == -1)
-		return (EXIT_FAILURE);
+		return (-1);
 
-	if ((sb.st_mode & S_IFMT) == S_IFDIR)
-		return (EXIT_SUCCESS);
-	return (EXIT_FAILURE);
+	return (sb.st_mode & S_IFMT);
 }

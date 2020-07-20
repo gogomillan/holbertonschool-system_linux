@@ -6,21 +6,20 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <dirent.h>
 
 /* main */
-int _readdir(char **dirs, char **opts);
-int getargs(char **argv, char ***dirs, char ***opts);
+int _readdir(char **fils, char **dirs, char **opts);
+int getargs(char **argv, char ***fil, char ***dir, char ***opt);
 
 /* libgetargs */
 int countagrs(char **argv, int *dir_qty, int *opt_qty);
-int setmemdir(int dir_qty, char ***dir, char ***tmp);
+int setmemdir(int dir_qty, char ***fil, char ***dir, char ***tmp);
 int setmemopt(int opt_qty, char ***opt);
-int releasemem(char ***dir, char ***opt);
+int releasemem(char ***fil, char ***dir, char ***opt);
 int _isdir(char *path);
 
 /* util */
@@ -32,7 +31,6 @@ int bsort(char **array);
 void _swap(char **array, int a, int b);
 int _arraylen(char **array);
 
-extern int errno;
 /**
  * dirent - struct for directory entry
  *
