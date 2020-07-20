@@ -19,36 +19,35 @@ char retd = EXIT_SUCCESS, retf = EXIT_SUCCESS;	/* Return */
 char dirprnctrl;		/* Colflow when print directory name & content */
 
 	(void)opts;
-	if (fils == NULL || dirs == NULL)
+	if (fils == NULL || dirs == NULL)		/* If no dirs and files, nothing */
 		return (EXIT_FAILURE);
 
-	if (*fils != NULL)
-	{
-		retf = _prnfiles(fils, &dirprnctrl);
+	if (*fils != NULL)						/* If files, then print them */
+	{	retf = _prnfiles(fils, &dirprnctrl);
 		if (*dirs != NULL && dirprnctrl == EXIT_SUCCESS)
 			printf("\n");
 	}
 
 	if (dirs[1] != NULL)
-		dirprnctrl = TRUE;
+		dirprnctrl = TRUE;	/* If there are more than one dir to print */
 	else
-		dirprnctrl = FALSE;
+		dirprnctrl = FALSE;	/* If there is only the "." dir to print */
 
-	while (*dirs != NULL)
-	{
-		retd = _prndir(*dirs, dirprnctrl);
+	while (*dirs != NULL)					/* If dirs, then print them */
+	{	retd = _prndir(*dirs, dirprnctrl);
 		dirs++;
 		if (dirprnctrl && retd == EXIT_SUCCESS && *dirs != NULL)
 			printf("\n");
 	}
 
-	return ((retf >= retd) ? retf : retd);
+	return ((retf >= retd) ? retf : retd);	/* If error on files or dirs prn */
 }
 
 /**
  * _prnfiles - Print the files in args
  *
  * @files: Path to the filenames
+ * @dirprnctrl: Control printing for files
  *
  * Return: EXIT_SUCCESS if alright, EXIT_FAILURE other case
  */

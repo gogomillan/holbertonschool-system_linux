@@ -68,12 +68,7 @@ int iter = 0;
 			free(*fil);
 			return (EXIT_FAILURE);
 		}
-		**dir = malloc(2 * sizeof(char));
-		if (**dir == NULL)
-		{	free(*tmp), free(*fil), free(*dir);
-			return (EXIT_FAILURE);
-		}
-		sprintf(**dir, ".");
+		**dir = ".";
 		*(*dir + 1) = NULL;
 	}
 	else				/* Else if there are directories */
@@ -99,6 +94,8 @@ int iter = 0;
  */
 int setmemopt(int opt_qty, char ***opt)
 {
+int iter;
+
 	if (opt_qty == 0)	/* When there are no options */
 	{
 		*opt = malloc(sizeof(char *));
@@ -111,6 +108,8 @@ int setmemopt(int opt_qty, char ***opt)
 		*opt = malloc((opt_qty + 1) * sizeof(char *));
 		if (*opt == NULL)
 			return (EXIT_FAILURE);
+		for (iter = 0; iter < (opt_qty + 1); iter++)
+			*(*opt + iter) = NULL;
 	}
 	return (EXIT_SUCCESS);
 }
@@ -126,19 +125,12 @@ int setmemopt(int opt_qty, char ***opt)
  */
 int releasemem(char ***fil, char ***dir, char ***opt)
 {
-char **dirs, **opts;
+char **opts;
 
-	free(*fil);
+	free(*fil);		/* Realease memory from files */
 	*fil = NULL;
 
-	dirs = *dir;	/* Realease memory from dirs array */
-	if (*dirs != NULL)
-	{
-		if (**dirs == '.' && *(dirs + 1) == NULL)
-			while (*dirs != NULL)
-				free(*dirs++);	/* Only if it didn't have dirs args */
-	}
-	free(*dir);
+	free(*dir);		/* Realease memory from dirs */
 	*dir = NULL;
 
 	opts = *opt;	/* Release memory from options array */

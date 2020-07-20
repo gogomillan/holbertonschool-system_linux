@@ -45,7 +45,7 @@ char *arg, **dir, **opt, **fil, **tdir, **tmp;	/* For each argument */
 				{	*opt = malloc(2 * sizeof(char));
 					if (*opt == NULL)
 						return (EXIT_FAILURE);
-					*opt[0] = *arg, *opt[1] = '\0', opt++, *opt = NULL;
+					**opt = *arg, *(*opt + 1) = '\0', opt++, *opt = NULL;
 				}
 			}
 		argv++;
