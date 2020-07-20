@@ -52,7 +52,8 @@ int iter = 0;
 	*tmp = malloc((dir_qty + 1) * sizeof(char *)); /* Temporary for fils */
 	if (*tmp == NULL)
 		return (EXIT_FAILURE);
-	**tmp = NULL;
+	for (iter = 0; iter < (dir_qty + 1); iter++)
+		*(*tmp + iter) = NULL;
 	*fil = malloc((dir_qty + 1) * sizeof(char *)); /* Memory for fils */
 	if (*fil == NULL)
 	{	free(*tmp);

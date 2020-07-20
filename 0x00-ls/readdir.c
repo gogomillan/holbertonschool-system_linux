@@ -17,13 +17,14 @@ char *geterrmsg(char *path);
 int _readdir(char **fils, char **dirs, char **opts)
 {
 char retd = EXIT_SUCCESS, retf = EXIT_SUCCESS;	/* Return */
-char dirprnctrl;		/* Colflow when print directory name & content */
+char dirprnctrl = FALSE;		/* Colflow when print directory name & content */
 
+	(void)opts;
 	if (fils == NULL || dirs == NULL)		/* If no dirs and files, nothing */
 		return (EXIT_FAILURE);
 
-	while (*opts != NULL)
-		set_format(*opts);
+	/* while (*opts != NULL) */
+	/* set_format(*opts); */
 
 	if (*fils != NULL)						/* If files, then print them */
 	{	retf = _prnfiles(fils, &dirprnctrl);
