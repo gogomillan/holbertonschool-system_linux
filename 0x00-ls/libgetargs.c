@@ -58,7 +58,8 @@ int iter = 0;
 	{	free(*tmp);
 		return (EXIT_FAILURE);
 	}
-	**fil = NULL;
+	for (iter = 0; iter < (dir_qty + 1); iter++)
+		*(*fil + iter) = NULL;
 
 	if (dir_qty == 0)	/* When there are no dirs */
 	{
