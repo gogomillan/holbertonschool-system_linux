@@ -23,7 +23,7 @@ char dirprnctrl = FALSE;		/* Colflow when print directory name & content */
 	if (fils == NULL || dirs == NULL)		/* If no dirs and files, nothing */
 		return (EXIT_FAILURE);
 
-	while (*opts != NULL)					/* If there is options */
+	while (*opts != NULL)					/* Set the options, if there are */
 	{
 		_format(*opts, PUT);
 		opts++;
@@ -106,25 +106,31 @@ struct stat sb;
 int _prndir(char *dirs, char dirprnctrl)
 {
 char bufmsg1[128], bufmsg2[128];	/* Buffer for messages*/
-DIR *dir;			/* Structure to the directory */
-char fileprnctrl;	/* Colflow when print directory */
+DIR *dir;							/* Structure to the directory */
+char fileprnctrl, flag_a, flag_A;	/* Colflow when print directory */
 
-	dir = opendir(dirs);
-	if (dir == NULL)
+	dir = opendir(dirs);						/* Open the dir */
+	if (dir == NULL)							/* Verify what happened */
 	{
 		sprintf(bufmsg1, "hls: %s", geterrmsg(dirs));
 		sprintf(bufmsg2, bufmsg1, dirs);
 		perror(bufmsg2);
 		return (EXIT_FAILURE);
 	}
-	if (dirprnctrl)
+	if (dirprnctrl)								/* If print dir name is neded */
 		printf("%s:\n", dirs);
 
 	fileprnctrl = FALSE;
-	while ((r_entry = readdir(dir)) != NULL)
-		if (r_entry->d_name[0] != '.')
+	while ((r_entry = readdir(dir)) != NULL)	/* For each dir entrance */
+	{	flag_a = _format("a", GET);
+		flag_A = _format("A", GET);
+		if ((flag_A == EXIT_SUCCESS &&	/* If opt A and not dir . or .. */
+			_strcmp(r_entry->d_name, ".") != 0 &&
+			_strcmp(r_entry->d_name, "..") != 0) ||
+			flag_a == EXIT_SUCCESS ||	/* Or opt a */
+			r_entry->d_name[0] != '.')	/* Or dir name starting without . */
 		{
-			if (fileprnctrl)
+			if (fileprnctrl)			/* File name sepparator */
 			{
 				if (_format("1", GET) == EXIT_SUCCESS)
 					printf("\n");
@@ -134,6 +140,7 @@ char fileprnctrl;	/* Colflow when print directory */
 			printf("%s", r_entry->d_name);
 			fileprnctrl = TRUE;
 		}
+	}
 	if (fileprnctrl)
 		printf("\n");
 
@@ -193,7 +200,7 @@ int iter = 0, flag = TRUE;
 	}
 	else if (oper == GET)	/* Try get the var opt */
 	{
-		for (iter = 0; opt[iter] != '\0'; iter++)
+		for (iter = 0; op[iter] != '\0'; iter++)
 			if (op[iter] == *opt)
 				return (EXIT_SUCCESS);
 		return (EXIT_FAILURE);
