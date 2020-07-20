@@ -155,7 +155,7 @@ int _isdir(char *path)
 {
 struct stat sb;
 
-	if (stat(path, &sb) == -1)
+	if (lstat(path, &sb) == -1)
 		return (-1);
 
 	return (sb.st_mode & S_IFMT);
