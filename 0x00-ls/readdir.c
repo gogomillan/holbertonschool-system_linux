@@ -1,5 +1,6 @@
 #include "hls.h"
 
+void set_format(char *opt);
 int _prndir(char *dirs, char dirprnctrl);
 int _prnfiles(char **files, char *dirprnctrl);
 char *geterrmsg(char *path);
@@ -18,17 +19,20 @@ int _readdir(char **fils, char **dirs, char **opts)
 char retd = EXIT_SUCCESS, retf = EXIT_SUCCESS;	/* Return */
 char dirprnctrl;		/* Colflow when print directory name & content */
 
-	(void)opts;
 	if (fils == NULL || dirs == NULL)		/* If no dirs and files, nothing */
 		return (EXIT_FAILURE);
+
+	while (*opts != NULL)
+		set_format(*opts);
 
 	if (*fils != NULL)						/* If files, then print them */
 	{	retf = _prnfiles(fils, &dirprnctrl);
 		if (*dirs != NULL && dirprnctrl == EXIT_SUCCESS)
 			printf("\n");
+		dirprnctrl = TRUE;
 	}
 
-	if (dirs[1] != NULL)
+	if (dirs[1] != NULL || dirprnctrl == TRUE)
 		dirprnctrl = TRUE;	/* If there are more than one dir to print */
 	else
 		dirprnctrl = FALSE;	/* If there is only the "." dir to print */
@@ -138,4 +142,37 @@ struct stat sb;
 		return ("cannot access %s");
 
 	return ("cannot open directory %s");
+}
+
+/**
+ * set_format - Set the ls print format
+ *
+ * @opt: the option
+ *
+ * Return: nothing
+ */
+void set_format(char *opt)
+{
+static char op[128] = { '\0' };
+int iter = 0, flag = TRUE;
+
+	for (iter = 0; op[iter] != '\0'; iter++)
+	{
+		if (op[iter] == 'A' && *opt == 'a')
+		{	op[iter] = *opt, flag = FALSE;
+		}
+		if (op[iter] == 'a' && *opt == 'A')
+			flag = FALSE;
+		if (op[iter] == '1' && *opt == 'l')
+		{	op[iter] = *opt, flag = FALSE;
+		}
+		if (op[iter] == 'l' && *opt == '1')
+			flag = FALSE;
+	}
+	if (flag)
+	{
+		op[iter] = *opt;
+		iter++;
+		op[iter] = '\0';
+	}
 }
