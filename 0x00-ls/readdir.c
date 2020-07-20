@@ -38,7 +38,7 @@ char dirprnctrl;		/* Colflow when print directory name & content */
 	{
 		retd = _prndir(*dirs, dirprnctrl);
 		dirs++;
-		if (dirprnctrl && *dirs != NULL)
+		if (dirprnctrl && retd == EXIT_SUCCESS && *dirs != NULL)
 			printf("\n");
 	}
 
