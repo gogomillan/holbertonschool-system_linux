@@ -68,7 +68,7 @@ struct stat sb;
 	*dirprnctrl = EXIT_FAILURE;
 	while (*files != NULL)
 	{
-		if (stat(*files, &sb) == -1)
+		if (lstat(*files, &sb) == -1)
 		{
 			sprintf(bufmsg1, "hls: %s", geterrmsg(*files));
 			sprintf(bufmsg2, bufmsg1, *files);
@@ -159,7 +159,7 @@ char *geterrmsg(char *path)
 {
 struct stat sb;
 
-	if (stat(path, &sb) == -1)
+	if (lstat(path, &sb) == -1)
 		return ("cannot access %s");
 
 	return ("cannot open directory %s");
