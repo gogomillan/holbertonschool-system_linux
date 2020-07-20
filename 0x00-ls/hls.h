@@ -3,6 +3,8 @@
 
 #define TRUE  1
 #define FALSE 0
+#define PUT 0
+#define GET 1
 
 #include <stdio.h>
 #include <stdlib.h>

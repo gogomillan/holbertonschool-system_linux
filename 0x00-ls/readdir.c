@@ -4,6 +4,7 @@ void set_format(char *opt);
 int _prndir(char *dirs, char dirprnctrl);
 int _prnfiles(char **files, char *dirprnctrl);
 char *geterrmsg(char *path);
+int _format(char *opt, char oper);
 
 /**
  * _readdir - Reading and printing the files content in a directory
@@ -19,12 +20,14 @@ int _readdir(char **fils, char **dirs, char **opts)
 char retd = EXIT_SUCCESS, retf = EXIT_SUCCESS;	/* Return */
 char dirprnctrl = FALSE;		/* Colflow when print directory name & content */
 
-	(void)opts;
 	if (fils == NULL || dirs == NULL)		/* If no dirs and files, nothing */
 		return (EXIT_FAILURE);
 
-	/* while (*opts != NULL) */
-	/* set_format(*opts); */
+	while (*opts != NULL)					/* If there is options */
+	{
+		_format(*opts, PUT);
+		opts++;
+	}
 
 	if (*fils != NULL)						/* If files, then print them */
 	{	retf = _prnfiles(fils, &dirprnctrl);
@@ -75,7 +78,12 @@ struct stat sb;
 		else
 		{
 			if (fileprnctrl)
-				printf("  ");
+			{
+				if (_format("1", GET) == EXIT_SUCCESS)
+					printf("\n");
+				else
+					printf("  ");
+			}
 			printf("%s", *files);
 			fileprnctrl = TRUE;
 			*dirprnctrl = EXIT_SUCCESS;
@@ -117,7 +125,12 @@ char fileprnctrl;	/* Colflow when print directory */
 		if (r_entry->d_name[0] != '.')
 		{
 			if (fileprnctrl)
-				printf("  ");
+			{
+				if (_format("1", GET) == EXIT_SUCCESS)
+					printf("\n");
+				else
+					printf("  ");
+			}
 			printf("%s", r_entry->d_name);
 			fileprnctrl = TRUE;
 		}
@@ -146,34 +159,45 @@ struct stat sb;
 }
 
 /**
- * set_format - Set the ls print format
+ * _format - Set the ls print format
  *
  * @opt: the option
+ * @oper: the operation [PUT | GET]
  *
- * Return: nothing
+ * Return: EXIT_SUCCESS or EXIT_FAILURE
  */
-void set_format(char *opt)
+int _format(char *opt, char oper)
 {
 static char op[128] = { '\0' };
 int iter = 0, flag = TRUE;
 
-	for (iter = 0; op[iter] != '\0'; iter++)
+	if (oper == PUT)	/* Put the flag from var opt */
 	{
-		if (op[iter] == 'A' && *opt == 'a')
-		{	op[iter] = *opt, flag = FALSE;
+		for (iter = 0; op[iter] != '\0'; iter++)
+		{
+			if (op[iter] == 'A' && *opt == 'a')
+			{	op[iter] = *opt, flag = FALSE;
+			}
+			if (op[iter] == 'a' && *opt == 'A')
+				flag = FALSE;
+			if (op[iter] == '1' && *opt == 'l')
+			{	op[iter] = *opt, flag = FALSE;
+			}
+			if (op[iter] == 'l' && *opt == '1')
+				flag = FALSE;
 		}
-		if (op[iter] == 'a' && *opt == 'A')
-			flag = FALSE;
-		if (op[iter] == '1' && *opt == 'l')
-		{	op[iter] = *opt, flag = FALSE;
+		if (flag)
+		{	op[iter] = *opt, iter++, op[iter] = '\0';
 		}
-		if (op[iter] == 'l' && *opt == '1')
-			flag = FALSE;
+		return (EXIT_SUCCESS);
 	}
-	if (flag)
+	else if (oper == GET)	/* Try get the var opt */
 	{
-		op[iter] = *opt;
-		iter++;
-		op[iter] = '\0';
+		for (iter = 0; opt[iter] != '\0'; iter++)
+			if (op[iter] == *opt)
+				return (EXIT_SUCCESS);
+		return (EXIT_FAILURE);
 	}
+	else					/* When other case */
+		return (EXIT_FAILURE);
 }
