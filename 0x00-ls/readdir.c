@@ -133,9 +133,9 @@ char fileprnctrl, flag_a, flag_A;	/* Colflow when print directory */
 			if (fileprnctrl)			/* File name sepparator */
 			{
 				if (_format("1", GET) == EXIT_SUCCESS)
-					printf("\n");
+					printf("\n");	/* Separator for -1 option */
 				else
-					printf("  ");
+					printf("  ");	/* Separator for others */
 			}
 			printf("%s", r_entry->d_name);
 			fileprnctrl = TRUE;
