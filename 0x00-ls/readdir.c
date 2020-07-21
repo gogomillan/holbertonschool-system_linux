@@ -61,32 +61,39 @@ char dirprnctrl = FALSE;		/* Colflow when print directory name & content */
  */
 int _prnfiles(char **files, char *dirprnctrl)
 {
-char bufmsg1[128], bufmsg2[128];	/* Buffer for messages*/
+char bufmsg1[128], bufmsg2[128], flag_1, flag_l;/* Buffer for messages*/
 char fileprnctrl = FALSE, ret = EXIT_SUCCESS;	/* Colflow when print */
+/**
+ * stat - struct for file information
+ */
 struct stat sb;
 
 	*dirprnctrl = EXIT_FAILURE;
-	while (*files != NULL)
+	while (*files != NULL)					/* For each file */
 	{
-		if (lstat(*files, &sb) == -1)
+		if (lstat(*files, &sb) == -1)	/* If the path has a problem */
 		{
 			sprintf(bufmsg1, "hls: %s", geterrmsg(*files));
 			sprintf(bufmsg2, bufmsg1, *files);
 			perror(bufmsg2);
-			ret = EXIT_FAILURE;
+			ret = EXIT_FAILURE;			/* Memorize errors to return */
 		}
-		else
+		else							/* When path is right */
 		{
+			flag_1 = _format("1", GET), flag_l = _format("l", GET);
 			if (fileprnctrl)
 			{
-				if (_format("1", GET) == EXIT_SUCCESS)
+				if (flag_l == EXIT_SUCCESS || flag_1 == EXIT_SUCCESS)
 					printf("\n");
 				else
 					printf("  ");
 			}
-			printf("%s", *files);
+			if (flag_l == EXIT_SUCCESS)
+				printf("%s", frmt_l("", *files));
+			else
+				printf("%s", *files);
 			fileprnctrl = TRUE;
-			*dirprnctrl = EXIT_SUCCESS;
+			*dirprnctrl = EXIT_SUCCESS;	/* Memorize if print */
 		}
 		files++;
 	}
@@ -105,9 +112,9 @@ struct stat sb;
  */
 int _prndir(char *dirs, char dirprnctrl)
 {
-char bufmsg1[128], bufmsg2[128];	/* Buffer for messages*/
-DIR *dir;							/* Structure to the directory */
-char fileprnctrl, flag_a, flag_A;	/* Colflow when print directory */
+char bufmsg1[128], bufmsg2[128], flag_1, flag_l;	/* Buffer for messages*/
+DIR *dir;									/* Structure to the directory */
+char fileprnctrl, flag_a, flag_A;			/* Colflow when print */
 
 	dir = opendir(dirs);						/* Open the dir */
 	if (dir == NULL)							/* Verify what happened */
@@ -130,14 +137,18 @@ char fileprnctrl, flag_a, flag_A;	/* Colflow when print directory */
 			flag_a == EXIT_SUCCESS ||	/* Or opt a */
 			r_entry->d_name[0] != '.')	/* Or dir name starting without . */
 		{
+			flag_1 = _format("1", GET), flag_l = _format("l", GET);
 			if (fileprnctrl)			/* File name sepparator */
 			{
-				if (_format("1", GET) == EXIT_SUCCESS)
+				if (flag_l == EXIT_SUCCESS || flag_1 == EXIT_SUCCESS)
 					printf("\n");	/* Separator for -1 option */
 				else
 					printf("  ");	/* Separator for others */
 			}
-			printf("%s", r_entry->d_name);
+			if (flag_l == EXIT_SUCCESS)
+				printf("%s", frmt_l(dirs, r_entry->d_name));
+			else
+				printf("%s", r_entry->d_name);
 			fileprnctrl = TRUE;
 		}
 	}

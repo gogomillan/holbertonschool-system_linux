@@ -12,6 +12,9 @@
 #include <sys/stat.h>
 /*#include <unistd.h>*/
 #include <dirent.h>
+#include <time.h>
+#include <grp.h>
+#include <pwd.h>
 
 /* main */
 int _readdir(char **fils, char **dirs, char **opts);
@@ -27,6 +30,7 @@ int _isdir(char *path);
 /* util */
 int _strcmp(char *s1, char *s2);
 void  _arraycat(char **arr1, char **arr2);
+char *frmt_l(char *dir, char *path);
 
 /* bsort */
 int bsort(char **array);
