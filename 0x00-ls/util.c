@@ -88,7 +88,7 @@ int iter;
 		sprintf(sgrp, "%d", (int)sb.st_gid);
 	time = ctime(&(sb.st_mtime)), *(time + 16) = '\0';
 
-	sprintf(str, "%c%c%c%c%c%c%c%c%c%c %d %s %s %4d %s %s",
+	sprintf(str, "%c%c%c%c%c%c%c%c%c%c %d %s %s %5d %s %s",
 		t[(sb.st_mode & S_IFMT) / 010000],
 		r[(sb.st_mode & S_IRWXU) / 0100], w[(sb.st_mode & S_IRWXU) / 0100],
 		x[(sb.st_mode & S_IRWXU) / 0100], r[(sb.st_mode & S_IRWXG) / 010],
