@@ -60,7 +60,7 @@ char *frmt_l(char *dir, char *path)
 {
 static char str[512];	/* Result */
 char *t = "0pc3d5b7-1l3s", *r = "----rrrr", *w = "--ww--ww", *x = "-x-x-x-x";
-char *time;
+char *time, susr[128], sgrp[128];
 /**
  * stat - struct for file information
  */
@@ -73,27 +73,28 @@ int iter;
 		sprintf(str, "%s%c", path, '\0');
 	else
 		sprintf(str, "%s/%s%c", dir, path, '\0');
-
 	if (lstat(str, &sb) == -1)	/* If the path has a problem */
 		return (str);
-
 	for (iter = 0; iter < 512; iter++)
 		str[iter] = '\0';
 	usr = getpwuid(sb.st_uid), grp = getgrgid(sb.st_gid);
+	if (usr != NULL)
+		sprintf(susr, "%s", usr->pw_name);
+	else
+		sprintf(susr, "%d", (int)sb.st_uid);
+	if (grp != NULL)
+		sprintf(sgrp, "%s", grp->gr_name);
+	else
+		sprintf(sgrp, "%d", (int)sb.st_gid);
 	time = ctime(&(sb.st_mtime)), *(time + 16) = '\0';
 
-	sprintf(str, "%c%c%c%c%c%c%c%c%c%c %d %s %s %5d %s %s",
+	sprintf(str, "%c%c%c%c%c%c%c%c%c%c %d %s %s %d %s %s",
 		t[(sb.st_mode & S_IFMT) / 010000],
-		r[(sb.st_mode & S_IRWXU) / 0100],
-		w[(sb.st_mode & S_IRWXU) / 0100],
-		x[(sb.st_mode & S_IRWXU) / 0100],
-		r[(sb.st_mode & S_IRWXG) / 010],
-		w[(sb.st_mode & S_IRWXG) / 010],
-		x[(sb.st_mode & S_IRWXG) / 010],
-		r[(sb.st_mode & S_IRWXO)],
-		w[(sb.st_mode & S_IRWXO)],
-		x[(sb.st_mode & S_IRWXO)],
-		(int)sb.st_nlink, usr->pw_name, grp->gr_name,
+		r[(sb.st_mode & S_IRWXU) / 0100], w[(sb.st_mode & S_IRWXU) / 0100],
+		x[(sb.st_mode & S_IRWXU) / 0100], r[(sb.st_mode & S_IRWXG) / 010],
+		w[(sb.st_mode & S_IRWXG) / 010], x[(sb.st_mode & S_IRWXG) / 010],
+		r[(sb.st_mode & S_IRWXO)], w[(sb.st_mode & S_IRWXO)],
+		x[(sb.st_mode & S_IRWXO)], (int)sb.st_nlink, susr, sgrp,
 		(int)sb.st_size, (time + 4), path);
 
 	return (str);
