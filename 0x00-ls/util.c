@@ -79,23 +79,66 @@ int iter;
 		str[iter] = '\0';
 	usr = getpwuid(sb.st_uid), grp = getgrgid(sb.st_gid);
 	if (usr != NULL)
-		sprintf(susr, "%s", usr->pw_name);
+		sprintf(susr, "%s%c", usr->pw_name, '\0');
 	else
-		sprintf(susr, "%d", (int)sb.st_uid);
+		sprintf(susr, "%d%c", (int)sb.st_uid, '\0');
 	if (grp != NULL)
-		sprintf(sgrp, "%s", grp->gr_name);
+		sprintf(sgrp, "%s%c", grp->gr_name, '\0');
 	else
-		sprintf(sgrp, "%d", (int)sb.st_gid);
+		sprintf(sgrp, "%d%c", (int)sb.st_gid, '\0');
 	time = ctime(&(sb.st_mtime)), *(time + 16) = '\0';
 
 	sprintf(str, "%c%c%c%c%c%c%c%c%c%c %d %s %s %5d %s %s",
-		t[(sb.st_mode & S_IFMT) / 010000],
-		r[(sb.st_mode & S_IRWXU) / 0100], w[(sb.st_mode & S_IRWXU) / 0100],
-		x[(sb.st_mode & S_IRWXU) / 0100], r[(sb.st_mode & S_IRWXG) / 010],
-		w[(sb.st_mode & S_IRWXG) / 010], x[(sb.st_mode & S_IRWXG) / 010],
-		r[(sb.st_mode & S_IRWXO)], w[(sb.st_mode & S_IRWXO)],
-		x[(sb.st_mode & S_IRWXO)], (int)sb.st_nlink, susr, sgrp,
-		(int)sb.st_size, (time + 4), path);
+		t[(sb.st_mode & S_IFMT) / 010000], r[(sb.st_mode & S_IRWXU) / 0100],
+		w[(sb.st_mode & S_IRWXU) / 0100], x[(sb.st_mode & S_IRWXU) / 0100],
+		r[(sb.st_mode & S_IRWXG) / 010], w[(sb.st_mode & S_IRWXG) / 010],
+		x[(sb.st_mode & S_IRWXG) / 010], r[(sb.st_mode & S_IRWXO)],
+		w[(sb.st_mode & S_IRWXO)], x[(sb.st_mode & S_IRWXO)], (int)sb.st_nlink, susr,
+		sgrp, (int)sb.st_size, (time + 4), path);
 
 	return (str);
+}
+
+
+/**
+ * _dirstat - Define stats for files from a dirs
+ *
+ * @dirs: The path to the directory
+ * @stat: The statistic needed
+ *
+ * Return: The statistic value needed
+ */
+int _dirstat(char *dirs, char stat)
+{
+static int w_link, w_usrs, w_grps, w_size;	/* stats vars */
+char susr[128], sgrp[128], str[512];		/* Buffers */
+DIR *dir;									/* Structure to the directory */
+/**
+ * stat - struct for file information
+ */
+struct stat sb;
+struct passwd *usr;
+struct group *grp;
+
+	(void)susr, (void)sgrp, (void)str;
+	(void)usr, (void)grp;
+	dir = opendir(dirs);							/* Open the dir			 */
+	while ((r_entry = readdir(dir)) != NULL)		/* For each dir entrance */
+	{
+		sprintf(str, "%s/%s%c", dirs, r_entry->d_name, '\0');
+		if (lstat(str, &sb) == -1)	/* If the path has a problem */
+			continue;
+		if ((int)sb.st_nlink > w_link)
+			w_link = (int)sb.st_nlink;
+		if ((int)sb.st_size > w_size)
+			w_size = sb.st_size;
+	}
+
+	if (stat == W_LINK)
+		return (w_link);
+	if (stat == W_USRS)
+		return (w_usrs);
+	if (stat == W_GRPS)
+		return (w_grps);
+	return (w_size);
 }

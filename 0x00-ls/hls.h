@@ -3,8 +3,14 @@
 
 #define TRUE  1
 #define FALSE 0
+
 #define PUT 0
 #define GET 1
+
+#define W_LINK 1
+#define W_USRS 2
+#define W_GRPS 3
+#define W_SIZE 4
 
 #include <stdio.h>
 #include <stdlib.h>

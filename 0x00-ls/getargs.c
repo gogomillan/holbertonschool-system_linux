@@ -50,6 +50,6 @@ char *arg, **dir, **opt, **fil, **tdir, **tmp;	/* For each argument */
 			}
 		argv++;
 	}
-	bsort(*dirs), bsort(*fils), bsort(tdir), _arraycat(*fils, tdir), free(tdir);
+	bsort(*fils), bsort(tdir), _arraycat(*fils, tdir), free(tdir);
 	return (EXIT_SUCCESS);
 }

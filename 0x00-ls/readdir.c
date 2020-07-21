@@ -69,18 +69,17 @@ char fileprnctrl = FALSE, ret = EXIT_SUCCESS;	/* Colflow when print */
 struct stat sb;
 
 	*dirprnctrl = EXIT_FAILURE;
-	while (*files != NULL)					/* For each file */
+	flag_1 = _format("1", GET), flag_l = _format("l", GET);
+	while (*files != NULL)							/* For each file */
 	{
 		if (lstat(*files, &sb) == -1)	/* If the path has a problem */
 		{
 			sprintf(bufmsg1, "hls: %s", geterrmsg(*files));
-			sprintf(bufmsg2, bufmsg1, *files);
-			perror(bufmsg2);
-			ret = EXIT_FAILURE;			/* Memorize errors to return */
+			sprintf(bufmsg2, bufmsg1, *files), perror(bufmsg2);
+			ret = EXIT_FAILURE;	/* Memorize errors to return */
 		}
-		else							/* When path is right */
+		else								/* When path is right    */
 		{
-			flag_1 = _format("1", GET), flag_l = _format("l", GET);
 			if (fileprnctrl)
 			{
 				if (flag_l == EXIT_SUCCESS || flag_1 == EXIT_SUCCESS)
@@ -120,30 +119,29 @@ char fileprnctrl, flag_a, flag_A;			/* Colflow when print */
 	if (dir == NULL)							/* Verify what happened */
 	{
 		sprintf(bufmsg1, "hls: %s", geterrmsg(dirs));
-		sprintf(bufmsg2, bufmsg1, dirs);
-		perror(bufmsg2);
+		sprintf(bufmsg2, bufmsg1, dirs), perror(bufmsg2);
 		return (EXIT_FAILURE);
 	}
 	if (dirprnctrl)								/* If print dir name is neded */
 		printf("%s:\n", dirs);
 
+	flag_1 = _format("1", GET), flag_l = _format("l", GET);
+	flag_a = _format("a", GET), flag_A = _format("A", GET);
 	fileprnctrl = FALSE;
-	while ((r_entry = readdir(dir)) != NULL)	/* For each dir entrance */
-	{	flag_a = _format("a", GET);
-		flag_A = _format("A", GET);
-		if ((flag_A == EXIT_SUCCESS &&	/* If opt A and not dir . or .. */
+	while ((r_entry = readdir(dir)) != NULL)		/* For each dir entrance */
+	{
+		if ((flag_A == EXIT_SUCCESS &&	/* If opt A and not dir "." or ".." */
 			_strcmp(r_entry->d_name, ".") != 0 &&
 			_strcmp(r_entry->d_name, "..") != 0) ||
-			flag_a == EXIT_SUCCESS ||	/* Or opt a */
-			r_entry->d_name[0] != '.')	/* Or dir name starting without . */
+			flag_a == EXIT_SUCCESS ||	/* Or option "a" is set             */
+			r_entry->d_name[0] != '.')	/* Or dir name starting without "." */
 		{
-			flag_1 = _format("1", GET), flag_l = _format("l", GET);
 			if (fileprnctrl)			/* File name sepparator */
 			{
 				if (flag_l == EXIT_SUCCESS || flag_1 == EXIT_SUCCESS)
-					printf("\n");	/* Separator for -1 option */
+					printf("\n");	/* Separator for -1 option  */
 				else
-					printf("  ");	/* Separator for others */
+					printf("  ");	/* Separator for others    */
 			}
 			if (flag_l == EXIT_SUCCESS)
 				printf("%s", frmt_l(dirs, r_entry->d_name));
@@ -151,7 +149,7 @@ char fileprnctrl, flag_a, flag_A;			/* Colflow when print */
 				printf("%s", r_entry->d_name);
 			fileprnctrl = TRUE;
 		}
-	}
+	}													/* End while for dir */
 	if (fileprnctrl)
 		printf("\n");
 
