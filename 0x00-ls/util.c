@@ -4,28 +4,47 @@
  * _strcmp - Compare a string to another
  * @s1: The first array
  * @s2: The second array
+ * @sens: Case sensitive [NOCASE | CASE]
  *
  * Return: 0, greater than 0 or less than 0
  */
-int _strcmp(char *s1, char *s2)
+int _strcmp(char *s1, char *s2, char sens)
 {
-int i = 0, r = 0;
+int iter = 0, ret = 0;
+char a, b;
 
-	while (s1[i] != '\0' && s2[i] != '\0')
+	while (s1[iter] != '\0' && s2[iter] != '\0')
 	{
-		r = s1[i] - s2[i];
-		if (r != 0)
-			return (r);
-		if (s1[i + 1] == '\0' && s2[i + 1] != '\0')
-			r = s1[i + 1] - s2[i + 1];
-		else if (s1[i + 1] != '\0' && s2[i + 1] == '\0')
-			r = s1[i + 1] - s2[i + 1];
-		if (r != 0)
-			return (r);
-		i++;
+		a = s1[iter], b = s2[iter];
+		if (sens == NOCASE)
+		{
+			if (a >= 65 && a <= 90)
+				a += 32;
+			if (b >= 65 && b <= 90)
+				b += 32;
+		}
+		ret = a - b;
+		if (ret != 0)
+		a = s1[iter + 1], b = s2[iter + 1];
+		return (ret);
+		if ((a == '\0' && b != '\0') ||
+			(a != '\0' && b == '\0'))
+		{
+			if (sens == NOCASE)
+			{
+				if (a >= 65 && a <= 90)
+					a += 32;
+				if (b >= 65 && b <= 90)
+					b += 32;
+			}
+			ret = a - b;
+		}
+		if (ret != 0)
+			return (ret);
+		iter++;
 	}
 
-	return (r);
+	return (ret);
 }
 
 /**

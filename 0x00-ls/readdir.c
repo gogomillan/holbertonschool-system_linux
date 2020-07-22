@@ -131,8 +131,8 @@ char fileprnctrl, flag_a, flag_A;			/* Colflow when print */
 	while ((r_entry = readdir(dir)) != NULL)		/* For each dir entrance */
 	{
 		if ((flag_A == EXIT_SUCCESS &&	/* If opt A and not dir "." or ".." */
-			_strcmp(r_entry->d_name, ".") != 0 &&
-			_strcmp(r_entry->d_name, "..") != 0) ||
+			_strcmp(r_entry->d_name, ".", NOCASE) != 0 &&
+			_strcmp(r_entry->d_name, "..", NOCASE) != 0) ||
 			flag_a == EXIT_SUCCESS ||	/* Or option "a" is set             */
 			r_entry->d_name[0] != '.')	/* Or dir name starting without "." */
 		{

@@ -4,6 +4,9 @@
 #define TRUE  1
 #define FALSE 0
 
+#define NOCASE 0
+#define CASE   1
+
 #define PUT 0
 #define GET 1
 
@@ -34,12 +37,12 @@ int releasemem(char ***fil, char ***dir, char ***opt);
 int _isdir(char *path);
 
 /* util */
-int _strcmp(char *s1, char *s2);
+int _strcmp(char *s1, char *s2, char sens);
 void  _arraycat(char **arr1, char **arr2);
 char *frmt_l(char *dir, char *path);
 
 /* bsort */
-int bsort(char **array);
+int bsort(char **array, char sens);
 void _swap(char **array, int a, int b);
 int _arraylen(char **array);
 

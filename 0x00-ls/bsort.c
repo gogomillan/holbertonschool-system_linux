@@ -4,10 +4,11 @@
  * bsort - Bubble sort algorith optimized
  *
  * @array: Array of string to order
+ * @sens: Case sensitive [NOCASE | CASE]
  *
  * Return: EXIT_SUCCESS when success process, EXIT_FAILURE other cases
  */
-int bsort(char **array)
+int bsort(char **array, char sens)
 {
 int newn = 0, iter, n_elem;
 
@@ -16,7 +17,7 @@ int newn = 0, iter, n_elem;
 	{
 		newn = 0;
 		for (iter = 1; iter < n_elem; iter++)
-			if (_strcmp(array[iter - 1], array[iter]) > 0)
+			if (_strcmp(array[iter - 1], array[iter], sens) > 0)
 			{
 				_swap(array, (iter - 1), iter);
 				newn = iter;

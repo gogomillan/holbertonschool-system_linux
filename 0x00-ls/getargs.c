@@ -25,7 +25,7 @@ char *arg, **dir, **opt, **fil, **tdir, **tmp;	/* For each argument */
 	}
 	dir = *dirs, opt = *opts, fil = *fils, tmp = tdir;	/* Reviewing args */
 	while (*argv != NULL)
-	{	arg = *argv;
+	{	arg = *argv++;
 		if (*arg != '-')	/* If the arg is a file / dir */
 		{	f_type = _isdir(arg);
 			if (f_type == S_IFDIR)		/* Is a dir */
@@ -48,8 +48,8 @@ char *arg, **dir, **opt, **fil, **tdir, **tmp;	/* For each argument */
 					**opt = *arg, *(*opt + 1) = '\0', opt++, *opt = NULL;
 				}
 			}
-		argv++;
 	}
-	bsort(*fils), _arraycat(*fils, tdir), free(tdir);
+	bsort(*dirs, NOCASE), bsort(*fils, NOCASE), bsort(tdir, NOCASE);
+	_arraycat(*fils, tdir), free(tdir);
 	return (EXIT_SUCCESS);
 }
