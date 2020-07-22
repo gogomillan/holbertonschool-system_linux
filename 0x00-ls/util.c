@@ -25,8 +25,8 @@ char a, b;
 		}
 		ret = a - b;
 		if (ret != 0)
+			return (ret);
 		a = s1[iter + 1], b = s2[iter + 1];
-		return (ret);
 		if ((a == '\0' && b != '\0') ||
 			(a != '\0' && b == '\0'))
 		{
