@@ -13,10 +13,10 @@ int _strcmp(char *s1, char *s2, char sens)
 int iter = 0, ret = 0;
 char a, b;
 
-	while (s1[iter] != '\0' && s2[iter] != '\0')
+	while (s1[iter] != '\0' && s2[iter] != '\0')	/* Go through the both string */
 	{
-		a = s1[iter], b = s2[iter];
-		if (sens == NOCASE)
+		a = s1[iter], b = s2[iter];			/* Evaluates the current position */
+		if (sens == NOCASE)		/* In no case sensitive */
 		{
 			if (a >= 65 && a <= 90)
 				a += 32;
@@ -24,13 +24,12 @@ char a, b;
 				b += 32;
 		}
 		ret = a - b;
-		if (ret != 0)
+		if (ret != 0)	/* If different returns the difference */
 			return (ret);
-		a = s1[iter + 1], b = s2[iter + 1];
-		if ((a == '\0' && b != '\0') ||
-			(a != '\0' && b == '\0'))
+		a = s1[iter + 1], b = s2[iter + 1];	/* Evaluates one pos in advance */
+		if ((a == '\0' && b != '\0') || (a != '\0' && b == '\0'))
 		{
-			if (sens == NOCASE)
+			if (sens == NOCASE)	/* For no case sensitive */
 			{
 				if (a >= 65 && a <= 90)
 					a += 32;
@@ -39,12 +38,12 @@ char a, b;
 			}
 			ret = a - b;
 		}
-		if (ret != 0)
+		if (ret != 0)	/* If different returns the difference */
 			return (ret);
-		iter++;
-	}
+		iter++;				/* Next iteration */
+	}															/*** End while ***/
 
-	return (ret);
+	return (ret);		/* If no differences */
 }
 
 /**
@@ -77,9 +76,9 @@ void _arraycat(char **arr1, char **arr2)
  */
 char *frmt_l(char *dir, char *path)
 {
-static char str[512];	/* Result */
+static char str[512]; /* Result */
 char *t = "0pc3d5b7-1l3s", *r = "----rrrr", *w = "--ww--ww", *x = "-x-x-x-x";
-char *time, susr[128], sgrp[128];
+char *time, susr[128], sgrp[128], lpath[512] = { '\0' };
 /**
  * stat - struct for file information
  */
@@ -88,32 +87,33 @@ struct passwd *usr;
 struct group *grp;
 int iter;
 
-	if (*dir == '\0')
+	if (*dir == '\0')			/* Path without dir */
 		sprintf(str, "%s%c", path, '\0');
-	else
+	else						/* Path with dir */
 		sprintf(str, "%s/%s%c", dir, path, '\0');
 	if (lstat(str, &sb) == -1)	/* If the path has a problem */
 		return (str);
-	for (iter = 0; iter < 512; iter++)
+	for (iter = 0; iter < 512; iter++)		/* Initialize  the  buffer  line */
 		str[iter] = '\0';
-	usr = getpwuid(sb.st_uid), grp = getgrgid(sb.st_gid);
+	usr = getpwuid(sb.st_uid), grp = getgrgid(sb.st_gid);	/* User &  Group */
 	if (usr != NULL)
-		sprintf(susr, "%s%c", usr->pw_name, '\0');
+		sprintf(susr, "%s%c", usr->pw_name, '\0');	/* Buffer for user name  */
 	else
-		sprintf(susr, "%d%c", (int)sb.st_uid, '\0');
+		sprintf(susr, "%d%c", (int)sb.st_uid, '\0');	/* Buff for usr code */
 	if (grp != NULL)
-		sprintf(sgrp, "%s%c", grp->gr_name, '\0');
+		sprintf(sgrp, "%s%c", grp->gr_name, '\0');	/* Buffer for group name */
 	else
-		sprintf(sgrp, "%d%c", (int)sb.st_gid, '\0');
-	time = ctime(&(sb.st_mtime)), *(time + 16) = '\0';
-
-	sprintf(str, "%c%c%c%c%c%c%c%c%c%c %d %s %s %5d %s %s",
+		sprintf(sgrp, "%d%c", (int)sb.st_gid, '\0');	/* Buff for grp code */
+	time = ctime(&(sb.st_mtime)), *(time + 16) = '\0';	/* Buff for DateTime */
+	if ((sb.st_mode & S_IFMT) == S_IFLNK)
+		getlname(path, lpath, sb.st_size);
+	sprintf(str, "%c%c%c%c%c%c%c%c%c%c %d %s %s %5d %s %s%s",	/* The  line */
 		t[(sb.st_mode & S_IFMT) / 010000], r[(sb.st_mode & S_IRWXU) / 0100],
 		w[(sb.st_mode & S_IRWXU) / 0100], x[(sb.st_mode & S_IRWXU) / 0100],
 		r[(sb.st_mode & S_IRWXG) / 010], w[(sb.st_mode & S_IRWXG) / 010],
 		x[(sb.st_mode & S_IRWXG) / 010], r[(sb.st_mode & S_IRWXO)],
 		w[(sb.st_mode & S_IRWXO)], x[(sb.st_mode & S_IRWXO)], (int)sb.st_nlink, susr,
-		sgrp, (int)sb.st_size, (time + 4), path);
+		sgrp, (int)sb.st_size, (time + 4), path, lpath);
 
 	return (str);
 }
@@ -160,4 +160,32 @@ struct group *grp;
 	if (stat == W_GRPS)
 		return (w_grps);
 	return (w_size);
+}
+
+/**
+ * getlname - Get the paht pointed by the link
+ *
+ * @path: Link path that points
+ * @str: Buffer to store the result
+ * @st_size: Lenght of the link name
+ *
+ * Return: The pointer to the string that represent the full path
+ */
+char *getlname(char *path, char *str, off_t st_size)
+{
+char *linkname = NULL;
+ssize_t r;
+
+	linkname = malloc(st_size + 1);
+	if (linkname != NULL)
+	{
+		r = readlink(path, linkname, st_size + 1);
+		r = (r != -1) ? r : 0;
+		linkname[r] = '\0';
+	}
+	sprintf(str, " -> %s%c", linkname, '\0');
+	if (linkname != NULL)
+		free(linkname);
+
+	return (str);
 }

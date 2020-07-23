@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-/*#include <unistd.h>*/
+#include <unistd.h>
 #include <dirent.h>
 #include <time.h>
 #include <grp.h>
@@ -40,6 +40,7 @@ int _isdir(char *path);
 int _strcmp(char *s1, char *s2, char sens);
 void  _arraycat(char **arr1, char **arr2);
 char *frmt_l(char *dir, char *path);
+char *getlname(char *path, char *str, off_t st_size);
 
 /* bsort */
 int bsort(char **array, char sens);
