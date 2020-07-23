@@ -183,7 +183,7 @@ ssize_t r;
 		r = (r != -1) ? r : 0;
 		linkname[r] = '\0';
 	}
-	sprintf(str, " -> %s%c", linkname, '\0');
+	sprintf(str, "->%s%c", linkname, '\0');
 	if (linkname != NULL)
 		free(linkname);
 
