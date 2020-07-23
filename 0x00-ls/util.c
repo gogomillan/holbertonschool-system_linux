@@ -158,7 +158,7 @@ struct group *grp;
 				if ((int)sb.st_size > w_size)
 					w_size = (int)sb.st_size;
 			}
-		w_link = intlen(w_link);
+		w_link = intlen(w_link), closedir(dir);
 	}
 	if (stat == W_LINK)
 		return (w_link);
