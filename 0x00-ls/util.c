@@ -85,7 +85,7 @@ char *time, susr[128], sgrp[128], lpath[512] = { '\0' };
 struct stat sb;
 struct passwd *usr;
 struct group *grp;
-int iter;
+int iter, w_ln;
 
 	if (*dir == '\0')			/* Path without dir */
 		sprintf(str, "%s%c", path, '\0');
@@ -93,8 +93,6 @@ int iter;
 		sprintf(str, "%s/%s%c", dir, path, '\0');
 	if (lstat(str, &sb) == -1)	/* If the path has a problem */
 		return (str);
-	for (iter = 0; iter < 512; iter++)		/* Initialize  the  buffer  line */
-		str[iter] = '\0';
 	usr = getpwuid(sb.st_uid), grp = getgrgid(sb.st_gid);	/* User &  Group */
 	if (usr != NULL)
 		sprintf(susr, "%s%c", usr->pw_name, '\0');	/* Buffer for user name  */
@@ -106,15 +104,17 @@ int iter;
 		sprintf(sgrp, "%d%c", (int)sb.st_gid, '\0');	/* Buff for grp code */
 	time = ctime(&(sb.st_mtime)), *(time + 16) = '\0';	/* Buff for DateTime */
 	if ((sb.st_mode & S_IFMT) == S_IFLNK)
-		getlname(path, lpath, sb.st_size);
-	sprintf(str, "%c%c%c%c%c%c%c%c%c%c %d %s %s %5d %s %s%s",	/* The  line */
+		getlname(str, lpath, sb.st_size);	/* Get the  symlink pointed  dir */
+	w_ln = _dirstat(path, W_LINK);
+	for (iter = 0; iter < 512; iter++)		/* Initialize  the  buffer  line */
+		str[iter] = '\0';
+	sprintf(str, "%c%c%c%c%c%c%c%c%c%c %*d %s %s %5d %s %s%s",/* The line */
 		t[(sb.st_mode & S_IFMT) / 010000], r[(sb.st_mode & S_IRWXU) / 0100],
 		w[(sb.st_mode & S_IRWXU) / 0100], x[(sb.st_mode & S_IRWXU) / 0100],
 		r[(sb.st_mode & S_IRWXG) / 010], w[(sb.st_mode & S_IRWXG) / 010],
 		x[(sb.st_mode & S_IRWXG) / 010], r[(sb.st_mode & S_IRWXO)],
-		w[(sb.st_mode & S_IRWXO)], x[(sb.st_mode & S_IRWXO)], (int)sb.st_nlink, susr,
-		sgrp, (int)sb.st_size, (time + 4), path, lpath);
-
+		w[(sb.st_mode & S_IRWXO)], x[(sb.st_mode & S_IRWXO)], w_ln, (int)sb.st_nlink,
+		susr, sgrp, (int)sb.st_size, (time + 4), path, lpath);
 	return (str);
 }
 
@@ -130,8 +130,8 @@ int iter;
 int _dirstat(char *dirs, char stat)
 {
 static int w_link, w_usrs, w_grps, w_size;	/* stats vars */
-char susr[128], sgrp[128], str[512];		/* Buffers */
-DIR *dir;									/* Structure to the directory */
+char susr[128], sgrp[128], str[512], flag_a, flag_A;			/* Buffers */
+DIR *dir;									/* Structure to the directory  */
 /**
  * stat - struct for file information
  */
@@ -139,31 +139,40 @@ struct stat sb;
 struct passwd *usr;
 struct group *grp;
 
-	(void)susr, (void)sgrp, (void)str;
-	(void)usr, (void)grp;
-	dir = opendir(dirs);							/* Open the dir			 */
-	while ((r_entry = readdir(dir)) != NULL)		/* For each dir entrance */
-	{
-		sprintf(str, "%s/%s%c", dirs, r_entry->d_name, '\0');
-		if (lstat(str, &sb) == -1)	/* If the path has a problem */
-			continue;
-		if ((int)sb.st_nlink > w_link)
-			w_link = (int)sb.st_nlink;
-		if ((int)sb.st_size > w_size)
-			w_size = sb.st_size;
+	(void)susr, (void)sgrp, (void)str, (void)usr, (void)grp;
+	if (stat == W_INIT)
+	{	dir = opendir(dirs);							/* Open the dir			 */
+		flag_a = _format("a", GET), flag_A = _format("A", GET);
+		while ((r_entry = readdir(dir)) != NULL)		/* For each dir entrance */
+			if ((flag_A == EXIT_SUCCESS &&	/* If opt A and not dir "." or ".." */
+				_strcmp(r_entry->d_name, ".", NOCASE) != 0 &&
+				_strcmp(r_entry->d_name, "..", NOCASE) != 0) ||
+				flag_a == EXIT_SUCCESS ||	/* Or option "a" is set             */
+				r_entry->d_name[0] != '.')	/* Or dir name starting without "." */
+			{
+				sprintf(str, "%s/%s%c", dirs, r_entry->d_name, '\0');
+				if (lstat(str, &sb) == -1)	/* If the path has a problem */
+					continue;
+				if ((int)sb.st_nlink > w_link)
+					w_link = (int)sb.st_nlink;
+				if ((int)sb.st_size > w_size)
+					w_size = (int)sb.st_size;
+			}
+		w_link = intlen(w_link);
 	}
-
 	if (stat == W_LINK)
 		return (w_link);
 	if (stat == W_USRS)
 		return (w_usrs);
 	if (stat == W_GRPS)
 		return (w_grps);
-	return (w_size);
+	if (stat == W_SIZE)
+		return (w_size);
+	return (EXIT_SUCCESS);
 }
 
 /**
- * getlname - Get the paht pointed by the link
+ * getlname - Get the paht pointed by the symbolic link
  *
  * @path: Link path that points
  * @str: Buffer to store the result
@@ -183,7 +192,7 @@ ssize_t r;
 		r = (r != -1) ? r : 0;
 		linkname[r] = '\0';
 	}
-	sprintf(str, "->%s%c", linkname, '\0');
+	sprintf(str, " -> %s%c", linkname, '\0');
 	if (linkname != NULL)
 		free(linkname);
 

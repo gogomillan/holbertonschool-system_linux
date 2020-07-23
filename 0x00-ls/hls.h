@@ -10,6 +10,7 @@
 #define PUT 0
 #define GET 1
 
+#define W_INIT 0
 #define W_LINK 1
 #define W_USRS 2
 #define W_GRPS 3
@@ -41,11 +42,22 @@ int _strcmp(char *s1, char *s2, char sens);
 void  _arraycat(char **arr1, char **arr2);
 char *frmt_l(char *dir, char *path);
 char *getlname(char *path, char *str, off_t st_size);
+int _dirstat(char *dirs, char stat);
+
+/* util1 */
+int intlen(int vr);
 
 /* bsort */
 int bsort(char **array, char sens);
 void _swap(char **array, int a, int b);
 int _arraylen(char **array);
+
+/* readdir */
+void set_format(char *opt);
+int _prndir(char *dirs, char dirprnctrl);
+int _prnfiles(char **files, char *dirprnctrl);
+char *geterrmsg(char *path);
+int _format(char *opt, char oper);
 
 /**
  * dirent - struct for directory entry

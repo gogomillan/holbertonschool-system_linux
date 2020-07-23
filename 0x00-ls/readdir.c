@@ -1,11 +1,5 @@
 #include "hls.h"
 
-void set_format(char *opt);
-int _prndir(char *dirs, char dirprnctrl);
-int _prnfiles(char **files, char *dirprnctrl);
-char *geterrmsg(char *path);
-int _format(char *opt, char oper);
-
 /**
  * _readdir - Reading and printing the files content in a directory
  *
@@ -111,10 +105,8 @@ struct stat sb;
  */
 int _prndir(char *dirs, char dirprnctrl)
 {
-char bufmsg1[128], bufmsg2[128], flag_1, flag_l;	/* Buffer for messages*/
+char bufmsg1[128], bufmsg2[128], flag_1, flag_l, fileprnctrl, flag_a, flag_A;
 DIR *dir;									/* Structure to the directory */
-char fileprnctrl, flag_a, flag_A;			/* Colflow when print */
-
 	dir = opendir(dirs);						/* Open the dir */
 	if (dir == NULL)							/* Verify what happened */
 	{
@@ -124,10 +116,9 @@ char fileprnctrl, flag_a, flag_A;			/* Colflow when print */
 	}
 	if (dirprnctrl)								/* If print dir name is neded */
 		printf("%s:\n", dirs);
-
 	flag_1 = _format("1", GET), flag_l = _format("l", GET);
 	flag_a = _format("a", GET), flag_A = _format("A", GET);
-	fileprnctrl = FALSE;
+	fileprnctrl = FALSE, _dirstat(dirs, W_INIT);
 	while ((r_entry = readdir(dir)) != NULL)		/* For each dir entrance */
 	{
 		if ((flag_A == EXIT_SUCCESS &&	/* If opt A and not dir "." or ".." */
@@ -152,7 +143,6 @@ char fileprnctrl, flag_a, flag_A;			/* Colflow when print */
 	}													/* End while for dir */
 	if (fileprnctrl)
 		printf("\n");
-
 	closedir(dir);
 	return (EXIT_SUCCESS);
 }
