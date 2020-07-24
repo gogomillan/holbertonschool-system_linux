@@ -94,14 +94,15 @@ int iter, w_ln, w_sz, w_ur, w_gr;
 
 	_guid(sb.st_uid, susr); /* User  */
 	_ggid(sb.st_gid, sgrp); /* Group */
-
 	time = ctime(&(sb.st_mtime)), *(time + 16) = '\0';	/* Buff for DateTime */
 	if ((sb.st_mode & S_IFMT) == S_IFLNK)
 		getlname(str, lpath, sb.st_size);	/* Get the  symlink pointed  dir */
+
 	w_ln = _dstat(path, W_LN), w_sz = _dstat(path, W_SZ);
 	w_ur = _dstat(path, W_UR), w_gr = _dstat(path, W_GR);
 	for (iter = 0; iter < 512; iter++)		/* Initialize  the  buffer  line */
 		str[iter] = '\0';
+
 	sprintf(str, "%c%c%c%c%c%c%c%c%c%c %*d %*s %*s %*d %s %s%s",/* The line */
 		t[(sb.st_mode & S_IFMT) / 010000], r[(sb.st_mode & S_IRWXU) / 0100],
 		w[(sb.st_mode & S_IRWXU) / 0100], x[(sb.st_mode & S_IRWXU) / 0100],
@@ -111,7 +112,6 @@ int iter, w_ln, w_sz, w_ur, w_gr;
 		-w_ur, susr, -w_gr, sgrp, w_sz, (int)sb.st_size, (time + 4), path, lpath);
 	return (str);
 }
-
 
 /**
  * _dstat - Define stats for files from a dirs
@@ -123,14 +123,13 @@ int iter, w_ln, w_sz, w_ur, w_gr;
  */
 int _dstat(char *dirs, char stat)
 {
-static int w_link, w_usrs, w_grps, w_size, w_tmp;	/* stats vars */
+static int w_link, w_usrs, w_grps, w_size, w_tmp, n_fl;	/* stats vars */
 char str[512], stru[256], flag_a, flag_A;						/* Buffers    */
 DIR *dir;							/* Structure to the directory  */
 /**
  * stat - struct for file information
  */
 struct stat sb;
-
 	if (stat == W_INIT)
 	{	dir = opendir(dirs);							/* Open the dir			 */
 		flag_a = _format("a", GET), flag_A = _format("A", GET);
@@ -149,6 +148,7 @@ struct stat sb;
 				w_usrs = (w_tmp > w_usrs) ?  w_tmp : w_usrs;
 				w_tmp = _strlen(_ggid(sb.st_gid, stru));
 				w_grps = (w_tmp > w_grps) ?  w_tmp : w_grps;
+				n_fl++;
 			}
 		w_link = intlen(w_link), w_size = intlen(w_size), closedir(dir);
 	}
@@ -160,6 +160,8 @@ struct stat sb;
 		return (w_grps);
 	if (stat == W_SZ)
 		return (w_size);
+	if (stat == N_FL)
+		return (n_fl);
 	return (EXIT_SUCCESS);
 }
 

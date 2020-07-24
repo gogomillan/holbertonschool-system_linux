@@ -15,6 +15,7 @@
 #define W_UR 2
 #define W_GR 3
 #define W_SZ 4
+#define N_FL 5
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -49,6 +50,7 @@ int intlen(int vr);
 int _strlen(char *str);
 char *_guid(uid_t st_uid, char *susr);
 char *_ggid(gid_t st_gid, char *sgrp);
+char **dtom(char *dirs, size_t t_fls);
 
 /* bsort */
 int bsort(char **array, char sens);

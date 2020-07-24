@@ -73,3 +73,47 @@ struct group *grp;
 
 	return (sgrp);
 }
+
+/**
+ * dtom - Directory content to memory
+ *
+ * @dirs: The path to the dir
+ * @t_fls: Total files
+ *
+ * Return: Pointer to the list of files ordered
+ */
+char **dtom(char *dirs, size_t t_fls)
+{
+char flag_a, flag_A, **files, **tmp;	/* Buffers */
+DIR *dir;								/*  Structure to the directory */
+size_t iter;
+
+	files = malloc((t_fls + 1) * sizeof(char *));
+	if (files == NULL)
+		return (NULL);
+	for (iter = 0; iter < (t_fls + 1); iter++)
+		*(files + iter) = NULL;
+
+	dir = opendir(dirs);							/* Open the dir			 */
+	flag_a = _format("a", GET), flag_A = _format("A", GET), tmp = files;
+	while ((r_entry = readdir(dir)) != NULL)		/* For each dir entrance */
+		if ((flag_A == EXIT_SUCCESS &&	/* If  opt A and not dir "." or ".." */
+			_strcmp(r_entry->d_name, ".", NOCASE) != 0 &&
+			_strcmp(r_entry->d_name, "..", NOCASE) != 0) ||
+			flag_a == EXIT_SUCCESS ||	/* Or  option "a" is set             */
+			r_entry->d_name[0] != '.')	/* Or  dir name starting without "." */
+		{
+			*tmp = malloc((_strlen(r_entry->d_name) + 2) * sizeof(char));
+			if (*tmp == NULL)
+			{
+				while (*files++ != NULL)
+					free(*files);
+				free(files);
+			}
+			sprintf(*tmp, "%s%c", r_entry->d_name, '\0');
+			tmp++;
+		}
+	closedir(dir), bsort(files, NOCASE);
+
+	return (files);
+}
