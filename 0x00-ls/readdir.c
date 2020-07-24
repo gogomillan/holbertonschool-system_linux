@@ -20,6 +20,9 @@ char dirprnctrl = FALSE;		/* Colflow when print directory name & content */
 	while (*opts != NULL)					/* Set the options, if there are */
 		_format(*opts, PUT), opts++;
 
+	if (_format("r", GET) == EXIT_SUCCESS)
+		rbs(fils, NOCASE), rbs(dirs, NOCASE);
+
 	if (*fils != NULL)						/* If files, then print them */
 	{	retf = _prnfiles(fils, &dirprnctrl);
 		if (*dirs != NULL && dirprnctrl == EXIT_SUCCESS)
