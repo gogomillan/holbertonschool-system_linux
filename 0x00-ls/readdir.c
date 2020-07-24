@@ -18,10 +18,7 @@ char dirprnctrl = FALSE;		/* Colflow when print directory name & content */
 		return (EXIT_FAILURE);
 
 	while (*opts != NULL)					/* Set the options, if there are */
-	{
-		_format(*opts, PUT);
-		opts++;
-	}
+		_format(*opts, PUT), opts++;
 
 	if (*fils != NULL)						/* If files, then print them */
 	{	retf = _prnfiles(fils, &dirprnctrl);

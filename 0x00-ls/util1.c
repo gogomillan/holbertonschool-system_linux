@@ -110,10 +110,13 @@ size_t iter;
 					free(*files);
 				free(files);
 			}
-			sprintf(*tmp, "%s%c", r_entry->d_name, '\0');
-			tmp++;
+			sprintf(*tmp, "%s%c", r_entry->d_name, '\0'), tmp++;
 		}
-	closedir(dir), bsort(files, NOCASE);
+	closedir(dir);
+	if (_format("r", GET) == EXIT_SUCCESS)
+		rbs(files, NOCASE);
+	else
+		bsort(files, NOCASE);
 
 	return (files);
 }

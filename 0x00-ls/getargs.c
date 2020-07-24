@@ -29,14 +29,11 @@ char *arg, **dir, **opt, **fil, **tdir, **tmp;	/* For each argument */
 		if (*arg != '-')	/* If the arg is a file / dir */
 		{	f_type = _isdir(arg);
 			if (f_type == S_IFDIR)		/* Is a dir */
-			{	*dir = arg, dir++, *dir = NULL;
-			}
+				*dir = arg, dir++, *dir = NULL;
 			else if (f_type == S_IFREG)	/* Is a reg file */
-			{	*tmp = arg, tmp++, *tmp = NULL;
-			}
+				*tmp = arg, tmp++, *tmp = NULL;
 			else						/* Is other case */
-			{	*fil = arg, fil++, *fil = NULL;
-			}
+				*fil = arg, fil++, *fil = NULL;
 		}
 		else				/* Else if it is an option or set of options */
 			while (*arg != '\0')

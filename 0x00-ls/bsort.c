@@ -62,3 +62,31 @@ int qty = 0;
 
 	return (qty);
 }
+
+/**
+ * rbs - Reverse bubble sort algorith optimized
+ *
+ * @array: Array of string to order
+ * @sens: Case sensitive [NOCASE | CASE]
+ *
+ * Return: EXIT_SUCCESS when success process, EXIT_FAILURE other cases
+ */
+int rbs(char **array, char sens)
+{
+int newn = 0, iter, n_elem;
+
+	n_elem = _arraylen(array);
+	while (n_elem > 1)
+	{
+		newn = 0;
+		for (iter = 1; iter < n_elem; iter++)
+			if (_strcmp(array[iter - 1], array[iter], sens) < 0)
+			{
+				_swap(array, (iter - 1), iter);
+				newn = iter;
+			}
+		n_elem = newn;
+	}
+
+	return (EXIT_SUCCESS);
+}

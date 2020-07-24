@@ -56,6 +56,7 @@ char **dtom(char *dirs, size_t t_fls);
 int bsort(char **array, char sens);
 void _swap(char **array, int a, int b);
 int _arraylen(char **array);
+int rbs(char **array, char sens);
 
 /* readdir */
 void set_format(char *opt);
