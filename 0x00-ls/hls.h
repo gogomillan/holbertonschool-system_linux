@@ -11,10 +11,10 @@
 #define GET 1
 
 #define W_INIT 0
-#define W_LINK 1
-#define W_USRS 2
-#define W_GRPS 3
-#define W_SIZE 4
+#define W_LN 1
+#define W_UR 2
+#define W_GR 3
+#define W_SZ 4
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,10 +42,13 @@ int _strcmp(char *s1, char *s2, char sens);
 void  _arraycat(char **arr1, char **arr2);
 char *frmt_l(char *dir, char *path);
 char *getlname(char *path, char *str, off_t st_size);
-int _dirstat(char *dirs, char stat);
+int _dstat(char *dirs, char stat);
 
 /* util1 */
 int intlen(int vr);
+int _strlen(char *str);
+char *_guid(uid_t st_uid, char *susr);
+char *_ggid(gid_t st_gid, char *sgrp);
 
 /* bsort */
 int bsort(char **array, char sens);

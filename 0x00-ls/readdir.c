@@ -118,7 +118,7 @@ DIR *dir;									/* Structure to the directory */
 		printf("%s:\n", dirs);
 	flag_1 = _format("1", GET), flag_l = _format("l", GET);
 	flag_a = _format("a", GET), flag_A = _format("A", GET);
-	fileprnctrl = FALSE, _dirstat(dirs, W_INIT);
+	fileprnctrl = FALSE, _dstat(dirs, W_INIT);
 	while ((r_entry = readdir(dir)) != NULL)		/* For each dir entrance */
 	{
 		if ((flag_A == EXIT_SUCCESS &&	/* If opt A and not dir "." or ".." */
@@ -182,19 +182,16 @@ int iter = 0, flag = TRUE;
 		for (iter = 0; op[iter] != '\0'; iter++)
 		{
 			if (op[iter] == 'A' && *opt == 'a')
-			{	op[iter] = *opt, flag = FALSE;
-			}
+				op[iter] = *opt, flag = FALSE;
 			if (op[iter] == 'a' && *opt == 'A')
 				flag = FALSE;
 			if (op[iter] == '1' && *opt == 'l')
-			{	op[iter] = *opt, flag = FALSE;
-			}
+				op[iter] = *opt, flag = FALSE;
 			if (op[iter] == 'l' && *opt == '1')
 				flag = FALSE;
 		}
 		if (flag)
-		{	op[iter] = *opt, iter++, op[iter] = '\0';
-		}
+			op[iter] = *opt, iter++, op[iter] = '\0';
 		return (EXIT_SUCCESS);
 	}
 	else if (oper == GET)	/* Try get the var opt */

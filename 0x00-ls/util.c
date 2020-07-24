@@ -83,9 +83,7 @@ char *time, susr[128], sgrp[128], lpath[512] = { '\0' };
  * stat - struct for file information
  */
 struct stat sb;
-struct passwd *usr;
-struct group *grp;
-int iter, w_ln;
+int iter, w_ln, w_sz, w_ur, w_gr;
 
 	if (*dir == '\0')			/* Path without dir */
 		sprintf(str, "%s%c", path, '\0');
@@ -93,53 +91,46 @@ int iter, w_ln;
 		sprintf(str, "%s/%s%c", dir, path, '\0');
 	if (lstat(str, &sb) == -1)	/* If the path has a problem */
 		return (str);
-	usr = getpwuid(sb.st_uid), grp = getgrgid(sb.st_gid);	/* User &  Group */
-	if (usr != NULL)
-		sprintf(susr, "%s%c", usr->pw_name, '\0');	/* Buffer for user name  */
-	else
-		sprintf(susr, "%d%c", (int)sb.st_uid, '\0');	/* Buff for usr code */
-	if (grp != NULL)
-		sprintf(sgrp, "%s%c", grp->gr_name, '\0');	/* Buffer for group name */
-	else
-		sprintf(sgrp, "%d%c", (int)sb.st_gid, '\0');	/* Buff for grp code */
+
+	_guid(sb.st_uid, susr); /* User  */
+	_ggid(sb.st_gid, sgrp); /* Group */
+
 	time = ctime(&(sb.st_mtime)), *(time + 16) = '\0';	/* Buff for DateTime */
 	if ((sb.st_mode & S_IFMT) == S_IFLNK)
 		getlname(str, lpath, sb.st_size);	/* Get the  symlink pointed  dir */
-	w_ln = _dirstat(path, W_LINK);
+	w_ln = _dstat(path, W_LN), w_sz = _dstat(path, W_SZ);
+	w_ur = _dstat(path, W_UR), w_gr = _dstat(path, W_GR);
 	for (iter = 0; iter < 512; iter++)		/* Initialize  the  buffer  line */
 		str[iter] = '\0';
-	sprintf(str, "%c%c%c%c%c%c%c%c%c%c %*d %s %s %5d %s %s%s",/* The line */
+	sprintf(str, "%c%c%c%c%c%c%c%c%c%c %*d %*s %*s %*d %s %s%s",/* The line */
 		t[(sb.st_mode & S_IFMT) / 010000], r[(sb.st_mode & S_IRWXU) / 0100],
 		w[(sb.st_mode & S_IRWXU) / 0100], x[(sb.st_mode & S_IRWXU) / 0100],
 		r[(sb.st_mode & S_IRWXG) / 010], w[(sb.st_mode & S_IRWXG) / 010],
 		x[(sb.st_mode & S_IRWXG) / 010], r[(sb.st_mode & S_IRWXO)],
 		w[(sb.st_mode & S_IRWXO)], x[(sb.st_mode & S_IRWXO)], w_ln, (int)sb.st_nlink,
-		susr, sgrp, (int)sb.st_size, (time + 4), path, lpath);
+		-w_ur, susr, -w_gr, sgrp, w_sz, (int)sb.st_size, (time + 4), path, lpath);
 	return (str);
 }
 
 
 /**
- * _dirstat - Define stats for files from a dirs
+ * _dstat - Define stats for files from a dirs
  *
  * @dirs: The path to the directory
  * @stat: The statistic needed
  *
  * Return: The statistic value needed
  */
-int _dirstat(char *dirs, char stat)
+int _dstat(char *dirs, char stat)
 {
-static int w_link, w_usrs, w_grps, w_size;	/* stats vars */
-char susr[128], sgrp[128], str[512], flag_a, flag_A;			/* Buffers */
-DIR *dir;									/* Structure to the directory  */
+static int w_link, w_usrs, w_grps, w_size, w_tmp;	/* stats vars */
+char str[512], stru[256], flag_a, flag_A;						/* Buffers    */
+DIR *dir;							/* Structure to the directory  */
 /**
  * stat - struct for file information
  */
 struct stat sb;
-struct passwd *usr;
-struct group *grp;
 
-	(void)susr, (void)sgrp, (void)str, (void)usr, (void)grp;
 	if (stat == W_INIT)
 	{	dir = opendir(dirs);							/* Open the dir			 */
 		flag_a = _format("a", GET), flag_A = _format("A", GET);
@@ -149,24 +140,25 @@ struct group *grp;
 				_strcmp(r_entry->d_name, "..", NOCASE) != 0) ||
 				flag_a == EXIT_SUCCESS ||	/* Or option "a" is set             */
 				r_entry->d_name[0] != '.')	/* Or dir name starting without "." */
-			{
-				sprintf(str, "%s/%s%c", dirs, r_entry->d_name, '\0');
+			{	sprintf(str, "%s/%s%c", dirs, r_entry->d_name, '\0');
 				if (lstat(str, &sb) == -1)	/* If the path has a problem */
 					continue;
-				if ((int)sb.st_nlink > w_link)
-					w_link = (int)sb.st_nlink;
-				if ((int)sb.st_size > w_size)
-					w_size = (int)sb.st_size;
+				w_link = ((int)sb.st_nlink > w_link) ? (int)sb.st_nlink : w_link;
+				w_size = ((int)sb.st_size > w_size) ? (int)sb.st_size : w_size;
+				w_tmp = _strlen(_guid(sb.st_uid, stru));
+				w_usrs = (w_tmp > w_usrs) ?  w_tmp : w_usrs;
+				w_tmp = _strlen(_ggid(sb.st_gid, stru));
+				w_grps = (w_tmp > w_grps) ?  w_tmp : w_grps;
 			}
-		w_link = intlen(w_link), closedir(dir);
+		w_link = intlen(w_link), w_size = intlen(w_size), closedir(dir);
 	}
-	if (stat == W_LINK)
+	if (stat == W_LN)
 		return (w_link);
-	if (stat == W_USRS)
+	if (stat == W_UR)
 		return (w_usrs);
-	if (stat == W_GRPS)
+	if (stat == W_GR)
 		return (w_grps);
-	if (stat == W_SIZE)
+	if (stat == W_SZ)
 		return (w_size);
 	return (EXIT_SUCCESS);
 }
