@@ -71,3 +71,28 @@ char **tmp;
 
 	free(dp);
 }
+
+/**
+ * _trmdt - Trip dots at the very begging
+ *
+ * @str: String
+ *
+ * Return: Pointer to the first position without dot
+ */
+char *_trmdt(char *str)
+{
+char *pt, flag = FALSE;
+
+	pt = str;
+
+	while (*pt == '.')
+	{
+		++pt;
+		if (*pt != '.' && *pt != '\0')
+			flag = TRUE;
+	}
+
+	if (flag == TRUE)
+		return (pt);
+	return (str);
+}

@@ -59,6 +59,7 @@ char **dtom(char *dirs, size_t t_fls);
 off_t _gsize(char *dir, char *path);
 int _gmfiles(char ***files, char ***sizes, ssize_t t_fls);
 void _freedp(char **dp);
+char *_trmdt(char *str);
 
 /* bsort */
 int bsort(char **array, char sens);

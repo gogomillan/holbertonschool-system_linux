@@ -113,7 +113,7 @@ int newn = 0, iter, n_elem, diff1, diff2;
 		for (iter = 1; iter < n_elem; iter++)
 		{
 			diff1 = _strcmp(arr1[iter - 1], arr1[iter], sens);
-			diff2 = _strcmp(arr2[iter - 1], arr2[iter], sens);
+			diff2 = _strcmp(_trmdt(arr2[iter - 1]), _trmdt(arr2[iter]), sens);
 			if (ord1 == ASC && diff1 > 0)
 				_swap(arr1, (iter - 1), iter), _swap(arr2, (iter - 1), iter), newn = iter;
 			else if ((ord1 == ASC && diff1 == 0) && (ord2 == ASC && diff2 > 0))
