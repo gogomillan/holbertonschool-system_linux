@@ -189,6 +189,10 @@ int iter = 0, flag = TRUE;
 				op[iter] = *opt, flag = FALSE;
 			if (op[iter] == 'l' && *opt == '1')
 				flag = FALSE;
+			if (op[iter] == 't' && *opt == 'S')
+				op[iter] = *opt, flag = FALSE;
+			if (op[iter] == 'S' && *opt == 't')
+				flag = FALSE;
 		}
 		if (flag)
 			op[iter] = *opt, iter++, op[iter] = '\0';

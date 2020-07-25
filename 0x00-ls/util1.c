@@ -84,16 +84,14 @@ struct group *grp;
  */
 char **dtom(char *dirs, size_t t_fls)
 {
-char fg_a, fg_A, flag_r, flag_S, **files, **tmp, **sizes, **size;
+char fg_a, fg_A, flag_r, flag_S, fg_t, **files, **tmp, **sizes, **size;
 DIR *dir;							/*  Structure to the directory */
 
 	if (_gmfiles(&files, &sizes, t_fls) == EXIT_FAILURE)
 		return (NULL);
-
 	dir = opendir(dirs);							/* Open the dir			 */
-	fg_a = _format("a", GET), fg_A = _format("A", GET);
+	fg_a = _format("a", GET), fg_A = _format("A", GET), fg_t = _format("t", GET);
 	tmp = files, size = sizes;
-
 	while ((r_entry = readdir(dir)) != NULL)					/* For each dir entrance */
 		if ((fg_A == EXIT_SUCCESS &&				/* If opt A and not dir "." or ".." */
 			_strcmp(r_entry->d_name, ".", NOCASE) != 0 &&
@@ -108,11 +106,14 @@ DIR *dir;							/*  Structure to the directory */
 				return (NULL);
 			}
 			sprintf(*tmp, "%s%c", r_entry->d_name, '\0'), tmp++;
-			sprintf(*size, "%0*d%c", 12, (int)_gsize(dirs, r_entry->d_name), '\0');
+			if (fg_t == EXIT_SUCCESS)
+				sprintf(*size, "%0*d%c", 12, (int)_gtime(dirs, r_entry->d_name), '\0');
+			else
+				sprintf(*size, "%0*d%c", 12, (int)_gsize(dirs, r_entry->d_name), '\0');
 			size++;
 		}
 	closedir(dir), flag_r = _format("r", GET), flag_S = _format("S", GET);
-
+	flag_S = (flag_S == EXIT_SUCCESS) ? flag_S : fg_t;
 	if (flag_r == EXIT_SUCCESS && flag_S != EXIT_SUCCESS)
 		rbs(files, NOCASE);
 	else if (flag_r != EXIT_SUCCESS && flag_S == EXIT_SUCCESS)
@@ -121,7 +122,6 @@ DIR *dir;							/*  Structure to the directory */
 		bsdc(sizes, ASC, files, DES, NOCASE);
 	else
 		bsort(files, NOCASE);
-
 	_freedp(sizes);
 	return (files);
 }

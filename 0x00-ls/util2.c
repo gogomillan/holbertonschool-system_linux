@@ -96,3 +96,26 @@ char *pt, flag = FALSE;
 		return (pt);
 	return (str);
 }
+
+/**
+ * _gtime - Return the mtime of a file
+ *
+ * @dir: Directory name
+ * @path: String with the path to the specific file
+ *
+ * Return: Pointer to the user name
+ */
+time_t _gtime(char *dir, char *path)
+{
+/**
+ * stat - struct for file information
+ */
+struct stat sb;
+char str[256];
+
+	sprintf(str, "%s/%s%c", dir, path, '\0');
+	if (lstat(str, &sb) == -1)	/* If the path has a problem */
+		return (0);
+
+	return (sb.st_mtime);
+}
