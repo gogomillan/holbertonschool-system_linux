@@ -86,12 +86,10 @@ char **dtom(char *dirs, size_t t_fls)
 {
 char fg_a, fg_A, flag_r, flag_S, fg_t, **files, **tmp, **sizes, **size;
 DIR *dir;							/*  Structure to the directory */
-
-	if (_gmfiles(&files, &sizes, t_fls) == EXIT_FAILURE)
+	if (_gmfiles(&files, &sizes, t_fls) == EXIT_FAILURE)			/* Get the memory*/
 		return (NULL);
-	dir = opendir(dirs);							/* Open the dir			 */
+	dir = opendir(dirs), tmp = files, size = sizes;				/* Open the dir			 */
 	fg_a = _format("a", GET), fg_A = _format("A", GET), fg_t = _format("t", GET);
-	tmp = files, size = sizes;
 	while ((r_entry = readdir(dir)) != NULL)					/* For each dir entrance */
 		if ((fg_A == EXIT_SUCCESS &&				/* If opt A and not dir "." or ".." */
 			_strcmp(r_entry->d_name, ".", NOCASE) != 0 &&
@@ -113,12 +111,14 @@ DIR *dir;							/*  Structure to the directory */
 			size++;
 		}
 	closedir(dir), flag_r = _format("r", GET), flag_S = _format("S", GET);
-	if (flag_r != EXIT_SUCCESS &&
-		(flag_S == EXIT_SUCCESS || fg_t == EXIT_SUCCESS))
+	if (flag_r != EXIT_SUCCESS && flag_S == EXIT_SUCCESS)
 		bsdc(sizes, DES, files, ASC, NOCASE), _freedp(sizes);
-	else if (flag_r == EXIT_SUCCESS &&
-			(flag_S == EXIT_SUCCESS || fg_t == EXIT_SUCCESS))
+	else if (flag_r == EXIT_SUCCESS && flag_S == EXIT_SUCCESS)
 		bsdc(sizes, ASC, files, DES, NOCASE), _freedp(sizes);
+	else if (flag_r != EXIT_SUCCESS && fg_t == EXIT_SUCCESS)
+		bsdc(sizes, DES, files, DES, NOCASE), _freedp(sizes);
+	else if (flag_r == EXIT_SUCCESS && fg_t == EXIT_SUCCESS)
+		bsdc(sizes, ASC, files, ASC, NOCASE), _freedp(sizes);
 	else if (flag_r == EXIT_SUCCESS)
 		rbs(files, NOCASE), _freedp(sizes);
 	else
