@@ -113,15 +113,15 @@ DIR *dir;							/*  Structure to the directory */
 			size++;
 		}
 	closedir(dir), flag_r = _format("r", GET), flag_S = _format("S", GET);
-	flag_S = (flag_S == EXIT_SUCCESS) ? flag_S : fg_t;
-	if (flag_r == EXIT_SUCCESS && flag_S != EXIT_SUCCESS)
-		rbs(files, NOCASE);
-	else if (flag_r != EXIT_SUCCESS && flag_S == EXIT_SUCCESS)
-		bsdc(sizes, DES, files, ASC, NOCASE);
-	else if (flag_r == EXIT_SUCCESS && flag_S == EXIT_SUCCESS)
-		bsdc(sizes, ASC, files, DES, NOCASE);
+	if (flag_r != EXIT_SUCCESS &&
+		(flag_S == EXIT_SUCCESS || fg_t == EXIT_SUCCESS))
+		bsdc(sizes, DES, files, ASC, NOCASE), _freedp(sizes);
+	else if (flag_r == EXIT_SUCCESS &&
+			(flag_S == EXIT_SUCCESS || fg_t == EXIT_SUCCESS))
+		bsdc(sizes, ASC, files, DES, NOCASE), _freedp(sizes);
+	else if (flag_r == EXIT_SUCCESS)
+		rbs(files, NOCASE), _freedp(sizes);
 	else
-		bsort(files, NOCASE);
-	_freedp(sizes);
+		bsort(files, NOCASE), _freedp(sizes);
 	return (files);
 }
