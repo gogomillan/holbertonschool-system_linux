@@ -99,7 +99,7 @@ DIR *dir;							/*  Structure to the directory */
 			fg_a == EXIT_SUCCESS || r_entry->d_name[0] != '.')	/* Or opt a Or dirname */
 		{
 			*tmp = malloc((_strlen(r_entry->d_name) + 2) * sizeof(char));
-			*size = malloc((12 + 2) * sizeof(char));
+			*size = malloc((20 + 2) * sizeof(char));
 			if (*tmp == NULL || *size == NULL)
 			{
 				_freedp(files), _freedp(sizes);
@@ -107,9 +107,9 @@ DIR *dir;							/*  Structure to the directory */
 			}
 			sprintf(*tmp, "%s%c", r_entry->d_name, '\0'), tmp++;
 			if (fg_t == EXIT_SUCCESS)
-				sprintf(*size, "%0*d%c", 12, (int)_gtime(dirs, r_entry->d_name), '\0');
+				sprintf(*size, "%0*ld%c", 20, _gtime(dirs, r_entry->d_name), '\0');
 			else
-				sprintf(*size, "%0*d%c", 12, (int)_gsize(dirs, r_entry->d_name), '\0');
+				sprintf(*size, "%0*d%c", 20, (int)_gsize(dirs, r_entry->d_name), '\0');
 			size++;
 		}
 	closedir(dir), flag_r = _format("r", GET), flag_S = _format("S", GET);
