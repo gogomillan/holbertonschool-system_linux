@@ -7,6 +7,9 @@
 #define NOCASE 0
 #define CASE   1
 
+#define ASC 10
+#define DES 20
+
 #define PUT 0
 #define GET 1
 
@@ -52,11 +55,17 @@ char *_guid(uid_t st_uid, char *susr);
 char *_ggid(gid_t st_gid, char *sgrp);
 char **dtom(char *dirs, size_t t_fls);
 
+/* util2 */
+off_t _gsize(char *dir, char *path);
+int _gmfiles(char ***files, char ***sizes, ssize_t t_fls);
+void _freedp(char **dp);
+
 /* bsort */
 int bsort(char **array, char sens);
 void _swap(char **array, int a, int b);
 int _arraylen(char **array);
 int rbs(char **array, char sens);
+int bsdc(char **arr1, char ord1, char **arr2, char ord2, char sens);
 
 /* readdir */
 void set_format(char *opt);

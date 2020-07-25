@@ -84,39 +84,44 @@ struct group *grp;
  */
 char **dtom(char *dirs, size_t t_fls)
 {
-char flag_a, flag_A, **files, **tmp;	/* Buffers */
-DIR *dir;								/*  Structure to the directory */
-size_t iter;
+char fg_a, fg_A, flag_r, flag_S, **files, **tmp, **sizes, **size;
+DIR *dir;							/*  Structure to the directory */
 
-	files = malloc((t_fls + 1) * sizeof(char *));
-	if (files == NULL)
+	if (_gmfiles(&files, &sizes, t_fls) == EXIT_FAILURE)
 		return (NULL);
-	for (iter = 0; iter < (t_fls + 1); iter++)
-		*(files + iter) = NULL;
 
 	dir = opendir(dirs);							/* Open the dir			 */
-	flag_a = _format("a", GET), flag_A = _format("A", GET), tmp = files;
-	while ((r_entry = readdir(dir)) != NULL)		/* For each dir entrance */
-		if ((flag_A == EXIT_SUCCESS &&	/* If  opt A and not dir "." or ".." */
+	fg_a = _format("a", GET), fg_A = _format("A", GET);
+	tmp = files, size = sizes;
+
+	while ((r_entry = readdir(dir)) != NULL)					/* For each dir entrance */
+		if ((fg_A == EXIT_SUCCESS &&				/* If opt A and not dir "." or ".." */
 			_strcmp(r_entry->d_name, ".", NOCASE) != 0 &&
 			_strcmp(r_entry->d_name, "..", NOCASE) != 0) ||
-			flag_a == EXIT_SUCCESS ||	/* Or  option "a" is set             */
-			r_entry->d_name[0] != '.')	/* Or  dir name starting without "." */
+			fg_a == EXIT_SUCCESS || r_entry->d_name[0] != '.')	/* Or opt a Or dirname */
 		{
 			*tmp = malloc((_strlen(r_entry->d_name) + 2) * sizeof(char));
-			if (*tmp == NULL)
+			*size = malloc((12 + 2) * sizeof(char));
+			if (*tmp == NULL || *size == NULL)
 			{
-				while (*files++ != NULL)
-					free(*files);
-				free(files);
+				_freedp(files), _freedp(sizes);
+				return (NULL);
 			}
 			sprintf(*tmp, "%s%c", r_entry->d_name, '\0'), tmp++;
+			sprintf(*size, "%0*d%c", 12, (int)_gsize(dirs, r_entry->d_name), '\0');
+			size++;
 		}
-	closedir(dir);
-	if (_format("r", GET) == EXIT_SUCCESS)
+	closedir(dir), flag_r = _format("r", GET), flag_S = _format("S", GET);
+
+	if (flag_r == EXIT_SUCCESS && flag_S != EXIT_SUCCESS)
 		rbs(files, NOCASE);
+	else if (flag_r != EXIT_SUCCESS && flag_S == EXIT_SUCCESS)
+		bsdc(sizes, DES, files, ASC, NOCASE);
+	else if (flag_r == EXIT_SUCCESS && flag_S == EXIT_SUCCESS)
+		bsdc(sizes, ASC, files, DES, NOCASE);
 	else
 		bsort(files, NOCASE);
 
+	_freedp(sizes);
 	return (files);
 }
