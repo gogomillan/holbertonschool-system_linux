@@ -5,6 +5,12 @@
 
 #include "_getline.h"
 
+/**
+ * _getline - Basic getline functionality.
+ * @fd:
+ * Return: Returns a null-terminated string that does not include the newline
+ * character, or NULL if there is a reading failure or reach EOF.
+ */
 char *_getline(const int fd)
 {
 char *buffer, buf[2];
