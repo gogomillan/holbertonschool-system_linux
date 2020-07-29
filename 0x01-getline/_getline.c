@@ -7,6 +7,27 @@
 
 char *_getline(const int fd)
 {
-	(void)fd;
-	return (NULL);
+char *buffer, buf[2];
+ssize_t qty;
+size_t iter = 0;
+
+	buffer = malloc((BUFF_SIZE + 1) * sizeof(char));
+	if (buffer == NULL)
+		return (NULL);
+
+	while ((qty = read(fd, (void *)buf, READ_SIZE)) > 0)
+	{
+		if (buf[0] != 10 && buf[0] != 12)
+			buffer[iter++] = buf[0];
+		else
+			break;
+	}
+	buffer[iter] = '\0';
+
+	if (qty == -1 || qty == 0)
+	{
+		free(buffer);
+		return (NULL);
+	}
+	return (buffer);
 }
