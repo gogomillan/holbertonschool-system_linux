@@ -17,7 +17,7 @@ char *buffer, buf[2];
 ssize_t qty;
 size_t iter = 0;
 
-	buffer = malloc((BUFF_SIZE + 1) * sizeof(char));
+	buffer = malloc((255 + 1) * sizeof(char));
 	if (buffer == NULL)
 		return (NULL);
 
