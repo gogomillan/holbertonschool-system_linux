@@ -7,7 +7,7 @@
 
 /**
  * _getline - Basic getline functionality.
- * @fd:
+ * @fd: File Descriptor
  * Return: Returns a null-terminated string that does not include the newline
  * character, or NULL if there is a reading failure or reach EOF.
  */
