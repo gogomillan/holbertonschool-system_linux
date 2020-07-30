@@ -22,18 +22,21 @@ size_t iter = 0;
 	buffer = malloc((255 + 1) * sizeof(char));
 	if (buffer == NULL)
 		return (NULL);
-	strcpy(buffer, buffst), buffst[0] = '\0';
+	strcpy(buffer, buffst), buffst[0] = '\0', nl = _strchr(buffer, 10);
+	if (nl != NULL)
+	{	*nl = '\0', nl++;
+		strcpy(buffst, nl);
+		return (buffer);
+	}
 	iter = _strlen(buffer);
 
 	while ((qty = read(fd, (void *)buf, READ_SIZE)) > 0)
 	{
-		buf[qty] = '\0';
-		nl = _strchr(buf, 10);
+		buf[qty] = '\0', nl = _strchr(buf, 10);
 		if (nl == NULL)
 			strcpy((buffer + iter), buf), iter += qty;
 		else
-		{
-			*nl = '\0', nl++;
+		{	*nl = '\0', nl++;
 			strcpy((buffer + iter), buf);
 			strcpy(buffst, nl);
 			break;
