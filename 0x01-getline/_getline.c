@@ -15,36 +15,27 @@
 char *_getline(const int fd)
 {
 static char buffst[256];
-char *nl = NULL, *cr = NULL, *buffer, buf[READ_SIZE + 1];
+char *nl = NULL, *buffer, buf[READ_SIZE + 1];
 ssize_t qty;
 size_t iter = 0;
 
 	buffer = malloc((255 + 1) * sizeof(char));
 	if (buffer == NULL)
 		return (NULL);
-	strcpy(buffer, buffst);
+	strcpy(buffer, buffst), buffst[0] = '\0';
+	iter = _strlen(buffer);
 
 	while ((qty = read(fd, (void *)buf, READ_SIZE)) > 0)
 	{
 		buf[qty] = '\0';
-		nl = _strchr(buf, 10), cr = _strchr(buf, 12);
-		if (nl == NULL && cr == NULL)
-		{
-			strcpy((buffer + iter), buf);
-			iter += qty;
-		}
+		nl = _strchr(buf, 10);
+		if (nl == NULL)
+			strcpy((buffer + iter), buf), iter += qty;
 		else
 		{
-			if (nl != NULL)
-			{	*nl = '\0', nl++;
-				strcpy((buffer + iter), buf);
-				strcpy(buffst, nl);
-			}
-			else
-			{	*cr = '\0', cr++;
-				strcpy((buffer + iter), buf);
-				strcpy(buffst, cr);
-			}
+			*nl = '\0', nl++;
+			strcpy((buffer + iter), buf);
+			strcpy(buffst, nl);
 			break;
 		}
 	}
@@ -72,4 +63,18 @@ char *_strchr(char *s, int c)
 	}
 
 	return (NULL);
+}
+
+/**
+ * _strlen - Returns the leng of a string
+ * @s: The string
+ * Return: The lenght
+ */
+size_t _strlen(char *s)
+{
+size_t iter = 0;
+
+	while (*s != '\0')
+		s++, iter++;
+	return (iter);
 }
