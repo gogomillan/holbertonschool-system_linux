@@ -14,7 +14,7 @@
  */
 char *_getline(const int fd)
 {
-static char buffst[256];
+static char buffst[BUFF_SIZE];
 char *nl = NULL, *buffer, buf[READ_SIZE + 1];
 ssize_t qty;
 size_t iter = 0;
