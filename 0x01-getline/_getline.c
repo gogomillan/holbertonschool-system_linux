@@ -14,11 +14,16 @@
  */
 char *_getline(const int fd)
 {
-static char buffst[BUFF_SIZE];
+char *buffst; /*static char buffst[BUFF_SIZE];*/
 char *nl = NULL, *buffer, buf[READ_SIZE + 1];
 ssize_t qty;
 size_t iter = 0;
+listfd_t *node;
 
+	while ((node = nodelistfd(fd)) == NULL)
+		return (NULL);
+
+	buffst = node->buffst;
 	buffer = malloc((255 + 1) * sizeof(char));
 	if (buffer == NULL)
 		return (NULL);
@@ -80,4 +85,53 @@ size_t iter = 0;
 	while (*s != '\0')
 		s++, iter++;
 	return (iter);
+}
+
+/**
+ * nodelistfd - Put or Get a node from a singly liked list for fd.
+ * @fd: The file descriptor
+ * Return: A pointer to a node from listfd_s or NULL if failure.
+ *
+ * Description: This function has two functionalities in one. The first one is
+ * that alows add the fd to the list if not exists or return the element if
+ * exists in the linked list.
+ */
+listfd_t *nodelistfd(int fd)
+{
+static listfd_t *head;
+listfd_t *node, *curr;
+
+	/* If -1 we should free the memory */
+	if (fd == -1)
+	{
+		curr = head;
+		while (curr != NULL)
+			node = curr, curr = curr->next, free(node);
+		head = NULL;
+		return (NULL);
+	}
+	/* Creating the possible new node */
+	node = malloc(sizeof(listfd_t));
+	if (node == NULL)
+		return (NULL);
+	node->fd = fd, node->buffst[0] = '\0', node->next = NULL;
+	/* Evaluating the head if not exists to created */
+	if (head == NULL)
+		head = node;
+	else
+		curr = head;
+	/* Looking for a possible element */
+	while (curr->next != NULL)
+		if (curr->fd != fd)
+			curr = curr->next;
+		else
+			break;
+	/* If exists return it */
+	if (curr->next != NULL)
+	{	free(node);
+		return (curr);
+	}
+	/* If not exist add it and return it */
+	curr->next = node;
+	return (node);
 }
