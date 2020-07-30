@@ -43,7 +43,7 @@ size_t iter = 0;
 		}
 	}
 
-	if (qty == -1 || qty == 0)
+	if ((qty == -1 || qty == 0) && _strlen(buffer) == 0)
 	{	free(buffer);
 		return (NULL);
 	}
