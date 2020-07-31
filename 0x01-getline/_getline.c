@@ -99,7 +99,7 @@ size_t iter = 0;
 listfd_t *nodelistfd(int fd)
 {
 static listfd_t *head;
-listfd_t *node, *curr;
+listfd_t *node, *curr, *prev;
 
 	/* If -1 we should free the memory */
 	if (fd == -1)
@@ -125,7 +125,7 @@ listfd_t *node, *curr;
 	/* Looking for a possible element */
 	while (curr != NULL)
 		if (curr->fd != fd)
-			curr = curr->next;
+			prev = curr, curr = curr->next;
 		else
 			break;
 	/* If exists return it */
@@ -134,6 +134,6 @@ listfd_t *node, *curr;
 		return (curr);
 	}
 	/* If not exist add it and return it */
-	curr->next = node;
+	prev->next = node;
 	return (node);
 }

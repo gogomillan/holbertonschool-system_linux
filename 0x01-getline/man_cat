@@ -1,0 +1,49 @@
+GCC(1)                                 GNU                                 GCC(1)
+CAT(1)                            User Commands                            CAT(1)
+
+
+NAME
+NAME
+       gcc - GNU project C and C++ compiler
+       cat - concatenate files and print on the standard output
+
+
+SYNOPSIS
+SYNOPSIS
+       gcc [-c|-S|-E] [-std=standard]
+       cat [OPTION]... [FILE]...
+           [-g] [-pg] [-Olevel]
+
+           [-Wwarn...] [-Wpedantic]
+DESCRIPTION
+           [-Idir...] [-Ldir...]
+       Concatenate FILE(s), or standard input, to standard output.
+           [-Dmacro[=defn]...] [-Umacro]
+
+           [-foption...] [-mmachine-option...]
+       -A, --show-all
+           [-o outfile] [@file] infile...
+              equivalent to -vET
+
+
+       Only the most useful options are listed here; see below for the remainder.
+       -b, --number-nonblank
+       g++ accepts mostly the same options as gcc.
+              number nonempty output lines, overrides -n
+
+
+DESCRIPTION
+       -e     equivalent to -vE
+       When you invoke GCC, it normally does preprocessing, compilation, assembly
+
+       and linking.  The "overall options" allow you to stop this process at an
+       -E, --show-ends
+       intermediate stage.  For example, the -c option says not to run the
+              display $ at end of each line
+       linker.  Then the output consists of object files output by the assembler.
+
+
+       -n, --number
+       Other options are passed on to one stage of processing.  Some options
+              number all output lines
+       control the preprocessor and others the compiler itself.  Yet other
