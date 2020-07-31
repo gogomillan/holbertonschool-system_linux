@@ -24,7 +24,7 @@ listfd_t *node;
 		return (NULL);
 
 	buffst = node->buffst;
-	buffer = malloc((255 + 1) * sizeof(char));
+	buffer = malloc((BUFF_SIZE + 1) * sizeof(char));
 	if (buffer == NULL)
 		return (NULL);
 	strcpy(buffer, buffst), buffst[0] = '\0', nl = _strchr(buffer, 10);
@@ -117,17 +117,19 @@ listfd_t *node, *curr;
 	node->fd = fd, node->buffst[0] = '\0', node->next = NULL;
 	/* Evaluating the head if not exists to created */
 	if (head == NULL)
+	{
 		head = node;
-	else
-		curr = head;
+		return (head);
+	}
+	curr = head;
 	/* Looking for a possible element */
-	while (curr->next != NULL)
+	while (curr != NULL)
 		if (curr->fd != fd)
 			curr = curr->next;
 		else
 			break;
 	/* If exists return it */
-	if (curr->next != NULL)
+	if (curr != NULL)
 	{	free(node);
 		return (curr);
 	}

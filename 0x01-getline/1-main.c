@@ -15,13 +15,14 @@ int main(void)
 	int fd;
 	char *line;
 
-	/*fd = open("1-main.c", 0);*/
-	fd = open("gcc.txt", 0);
+	fd = open("1-main.c", 0);
+	/*fd = open("gcc.txt", 0);*/
 	while ((line = _getline(fd)))
 	{
 		printf("%s\n", line);
 		free(line);
 	}
 	close(fd);
+	_getline(-1);
 	return (0);
 }
