@@ -7,7 +7,8 @@
 /**
  * struct listfd_s - singly linked list for fd
  * @fd: The file descriptor associated
- * @bufferst: The buffer static associated to fd
+ * @buffst: The buffer static associated to fd
+ * @next: The pointer to the next node
  */
 typedef struct listfd_s
 {
