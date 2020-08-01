@@ -37,7 +37,7 @@ listfd_t *node;
 
 	while ((qty = read(fd, (void *)buf, READ_SIZE)) > 0)
 	{
-		buf[qty] = '\0', nl = _strchr(buf, 10);
+		buf[qty] = '\0', mrknll(buf, qty, TOCR), nl = _strchr(buf, 10);
 		if (nl == NULL)
 			strcpy((buffer + iter), buf), iter += qty;
 		else
@@ -52,6 +52,7 @@ listfd_t *node;
 	{	free(buffer);
 		return (NULL);
 	}
+	mrknll(buffer, _strlen(buffer), TONU);
 	return (buffer);
 }
 
@@ -136,4 +137,27 @@ listfd_t *node, *curr, *prev;
 	/* If not exist add it and return it */
 	prev->next = node;
 	return (node);
+}
+
+/**
+ * mrknll - Mark the null char and vice versa
+ * @str: the string to format
+ * @len: the lenght to process
+ * Return: Nothing
+ */
+void mrknll(char *str, size_t len, char oper)
+{
+size_t iter = 0;
+
+	for (iter = 0; iter < len; iter++)
+		if (oper == TOCR)
+		{
+			if (str[iter] == '\0')
+				str[iter] = '\r';
+		}
+		else
+		{
+			if (str[iter] == '\r')
+				str[iter] = '\0';
+		}
 }
