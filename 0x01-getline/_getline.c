@@ -14,11 +14,11 @@
  */
 char *_getline(const int fd)
 {
-char *buffst; /*static char buffst[BUFF_SIZE];*/
-char *nl = NULL, *buffer, buf[READ_SIZE + 1];
-ssize_t qty;
-size_t iter = 0;
-listfd_t *node;
+	char *buffst; /*static char buffst[BUFF_SIZE];*/
+	char *nl = NULL, *buffer, buf[READ_SIZE + 1];
+	ssize_t qty;
+	size_t iter = 0;
+	listfd_t *node;
 
 	while ((node = nodelistfd(fd)) == NULL)
 		return (NULL);
@@ -81,7 +81,7 @@ char *_strchr(char *s, int c)
  */
 size_t _strlen(char *s)
 {
-size_t iter = 0;
+	size_t iter = 0;
 
 	while (*s != '\0')
 		s++, iter++;
@@ -99,8 +99,8 @@ size_t iter = 0;
  */
 listfd_t *nodelistfd(int fd)
 {
-static listfd_t *head;
-listfd_t *node, *curr, *prev;
+	static listfd_t *head;
+	listfd_t *node, *curr, *prev;
 
 	/* If -1 we should free the memory */
 	if (fd == -1)
@@ -125,10 +125,12 @@ listfd_t *node, *curr, *prev;
 	curr = head;
 	/* Looking for a possible element */
 	while (curr != NULL)
+	{
 		if (curr->fd != fd)
 			prev = curr, curr = curr->next;
 		else
 			break;
+	}
 	/* If exists return it */
 	if (curr != NULL)
 	{	free(node);
@@ -148,9 +150,10 @@ listfd_t *node, *curr, *prev;
  */
 void mrknll(char *str, size_t len, char oper)
 {
-size_t iter = 0;
+	size_t iter = 0;
 
 	for (iter = 0; iter < len; iter++)
+	{
 		if (oper == TOCR)
 		{
 			if (str[iter] == '\0')
@@ -161,4 +164,5 @@ size_t iter = 0;
 			if (str[iter] == '\r')
 				str[iter] = '\0';
 		}
+	}
 }
