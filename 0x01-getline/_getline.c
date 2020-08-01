@@ -143,6 +143,7 @@ listfd_t *node, *curr, *prev;
  * mrknll - Mark the null char and vice versa
  * @str: the string to format
  * @len: the lenght to process
+ * @oper: the operator
  * Return: Nothing
  */
 void mrknll(char *str, size_t len, char oper)

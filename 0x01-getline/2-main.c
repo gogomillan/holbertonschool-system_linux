@@ -60,9 +60,9 @@ int main(void)
 	printf("---------THE SWING (END)-----------\n");
 	while ((line1 = _getline(fd1)))
 	{
-		printf("%s\n", line1);  
+		printf("%s\n", line1);
 		free(line1);
-	}   
+	}
 	close(fd1);
 	close(fd2);
 	close(fd3);
@@ -71,9 +71,9 @@ int main(void)
 	fd1 = open("the_swing", O_RDONLY);
 	while ((line1 = _getline(fd1)))
 	{
-		printf("%s\n", line1);	  
+		printf("%s\n", line1);
 		free(line1);
-	}   
+	}
 	close(fd1);
 	_getline(-1);
 	return (EXIT_SUCCESS);
