@@ -9,3 +9,7 @@ CC=gcc
 1-hreadelf: 0_main.c
 	$(CC) -Wall -Werror -Wextra -pedantic 1_main.c -o 1-hreadelf
 	cp 1-hreadelf test
+
+2-hreadelf: 0_main.c
+	$(CC) -Wall -Werror -Wextra -pedantic 2_main.c -o 2-hreadelf
+	cp 2-hreadelf test
