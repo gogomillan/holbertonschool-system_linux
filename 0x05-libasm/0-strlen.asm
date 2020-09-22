@@ -1,6 +1,5 @@
 ; NASM code style
 ; Prototype when used in C: size_t asm_strlen(const char *str)
-; Arguments
 ; 	str(argument) -> rdi(register)
 
 	bits 64
@@ -8,7 +7,7 @@
 	section .text					; Code section
 	global asm_strlen				; Exporting the function name
 
-asm_strlen:							; The symbol or functio name label
+asm_strlen:							; The symbol or function name label
 	push rbp						; prologue
 	mov rbp, rsp
 
