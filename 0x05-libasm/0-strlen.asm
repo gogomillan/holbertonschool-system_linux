@@ -1,29 +1,36 @@
 ; NASM code style
 ; Prototype when used in C: size_t asm_strlen(const char *str)
+; Arguments
+; 	str(argument) -> rdi(register)
 
 	bits 64
 
-	section .text		; Code section
-	global asm_strlen	; Exporting the function name
+	section .text					; Code section
+	global asm_strlen				; Exporting the function name
 
-asm_strlen:
-	push rbp			; prologue
+asm_strlen:							; The symbol or functio name label
+	push rbp						; prologue
 	mov rbp, rsp
-	push rbx			; save rbx value in stack
-	push rcx			; save rcx value in stack
-	mov rbx, rdi		; save the 1st arg in rbx register
-	mov rcx, 0			; start in 0 the lenth arg in rcx register
 
-count_c:				; for statement
-	inc rcx				; incremet len by one
-	cmp byte [rbx + rcx - 1], 0x00	; compare each character of arg with caracter null
-	jne count_c			; if the char in arg is not = to caracter null continue in for
+	push rbx						; save rbx value in stack
+	push rcx						; save rcx value in stack
+
+	mov rbx, rdi					; save the argument(str) in rbx register
+	mov rcx, 0						; rcx register will be the iterator and starts in 0
+
+iter_i:								; loop iter_i ->  while (*str != '\0')
+	inc rcx							; increment the iterator
+	cmp byte [rbx + rcx - 1], 0x00	; compare character of iterator position with caracter null
+	jne iter_i						; if not null jump loop
 
 end:
-	dec rcx				; else decrement 1 the length to sub the null character
-	mov rax, rcx		; set the len in the return value
-	pop rcx				; set the rcx register with its old value
-	pop rbx				; set the rbx register with its old value
-	mov rsp, rbp		; epilogue
+	dec rcx							; decrement 1 because of the null character
+	mov rax, rcx					; set the lenght in the return register
+
+	pop rcx							; restore rcx register from stack
+	pop rbx							; restore rbx register from stack
+
+	mov rsp, rbp					; epilogue
 	pop rbp
-	ret					; return the len value
+
+	ret								; return
