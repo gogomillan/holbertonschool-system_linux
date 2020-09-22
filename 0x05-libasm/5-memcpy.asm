@@ -4,10 +4,10 @@
 	bits 64
 
 	section .data
-	iter1 dd 0		; iterator 1
-	arg_a dq 0		; argument 1
-	arg_b dq 0		; argument 2
-	arg_c dd 0		; argument 3
+	iter1 dd 0				; iterator 1
+	arg_a dq 0				; argument 1
+	arg_b dq 0				; argument 2
+	arg_c dd 0				; argument 3
 
 	section .text			; Code section
 	global asm_memcpy		; Exporting the function name
