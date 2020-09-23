@@ -19,6 +19,7 @@
 #define W_GR 3
 #define W_SZ 4
 #define N_FL 5
+#define N_DI 6
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,7 +40,7 @@ int countagrs(char **argv, int *dir_qty, int *opt_qty);
 int setmemdir(int dir_qty, char ***fil, char ***dir, char ***tmp);
 int setmemopt(int opt_qty, char ***opt);
 int releasemem(char ***fil, char ***dir, char ***opt);
-int _isdir(char *path);
+int _isdir(char *dir, char *path);
 
 /* util */
 int _strcmp(char *s1, char *s2, char sens);
@@ -53,14 +54,17 @@ int intlen(int vr);
 int _strlen(char *str);
 char *_guid(uid_t st_uid, char *susr);
 char *_ggid(gid_t st_gid, char *sgrp);
-char **dtom(char *dirs, size_t t_fls);
+char ***dtom(char *dirs, size_t t_fls, size_t t_drs);
 
 /* util2 */
 off_t _gsize(char *dir, char *path);
-int _gmfiles(char ***files, char ***sizes, ssize_t t_fls);
+int _gmfiles(char ***fls, char ***szs, ssize_t tfs, char ***ldrs, ssize_t tds);
 void _freedp(char **dp);
 char *_trmdt(char *str);
 time_t _gtime(char *dir, char *path);
+
+/* Util3 */
+void _sfd(char **sz, char **fl, char cs);
 
 /* bsort */
 int bsort(char **array, char sens);

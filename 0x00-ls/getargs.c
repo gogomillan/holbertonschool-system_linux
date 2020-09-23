@@ -27,7 +27,7 @@ char *arg, **dir, **opt, **fil, **tdir, **tmp;	/* For each argument */
 	while (*argv != NULL)
 	{	arg = *argv++;
 		if (*arg != '-')	/* If the arg is a file / dir */
-		{	f_type = _isdir(arg);
+		{	f_type = _isdir(NULL, arg);
 			if (f_type == S_IFDIR)		/* Is a dir */
 				*dir = arg, dir++, *dir = NULL;
 			else if (f_type == S_IFREG)	/* Is a reg file */

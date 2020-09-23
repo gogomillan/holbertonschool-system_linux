@@ -26,31 +26,41 @@ char str[256];
 /**
  * _gmfiles - Return the malloc memory for the file names and size
  *
- * @files: Pointer to the files structure in memory
- * @sizes: Pointer to the sizes structure in memory
- * @t_fls: Total number of files
+ * @fls: Pointer to the files structure in memory
+ * @szs: Pointer to the sizes structure in memory
+ * @tfl: Total number of files
+ * @ldrs: List of subdirectories
+ * @tdr: Total number of subdirectories
  *
  * Return: Pointer to the user name
  */
-int _gmfiles(char ***files, char ***sizes, ssize_t t_fls)
+int _gmfiles(char ***fls, char ***szs, ssize_t tfl, char ***ldrs, ssize_t tdr)
 {
 int iter;
 
-	*files = malloc((t_fls + 1) * sizeof(char *));
-	if (*files == NULL)
+	*fls = malloc((tfl + 1) * sizeof(char *));
+	if (*fls == NULL)
 		return (EXIT_FAILURE);
 
-	*sizes = malloc((t_fls + 1) * sizeof(char *));
-	if (*sizes == NULL)
-	{
-		free(*files);
+	*szs = malloc((tfl + 1) * sizeof(char *));
+	if (*szs == NULL)
+	{	free(*fls);
 		return (EXIT_FAILURE);
 	}
-	for (iter = 0; iter < (t_fls + 1); iter++)
-	{
-		*(*files + iter) = NULL;
-		*(*sizes + iter) = NULL;
+
+	*ldrs = malloc((tdr + 1) * sizeof(char *));
+	if (*ldrs == NULL)
+	{	free(*fls);
+		free(*szs);
+		return (EXIT_FAILURE);
 	}
+
+	for (iter = 0; iter < (tfl + 1); iter++)
+	{	*(*fls + iter) = NULL;
+		*(*szs + iter) = NULL;
+	}
+	for (iter = 0; iter < (tdr + 1); iter++)
+		*(*ldrs + iter) = NULL;
 
 	return (EXIT_SUCCESS);
 }
@@ -65,6 +75,9 @@ void _freedp(char **dp)
 {
 char **tmp;
 
+	if (dp == NULL)
+		return;
+
 	tmp = dp;
 	while (*tmp != NULL)
 		free(*tmp++);
@@ -73,7 +86,7 @@ char **tmp;
 }
 
 /**
- * _trmdt - Trip dots at the very begging
+ * _trmdt - Trim dots at the very begging. Useful for sorting.
  *
  * @str: String
  *

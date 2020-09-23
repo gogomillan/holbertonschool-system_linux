@@ -147,16 +147,27 @@ char **opts;
 /**
  * _isdir - Check a path to verify if directory or other
  *
+ * @dir: The base dir
  * @path: The path as a string
  *
  * Return: Type of file or -1 other cases
  */
-int _isdir(char *path)
+int _isdir(char *dir, char *path)
 {
+char str[512];
 struct stat sb;
 
-	if (lstat(path, &sb) == -1)
-		return (-1);
+	if (dir != NULL)
+	{
+		sprintf(str, "%s/%s", dir, path);
+		if (lstat(str, &sb) == -1)
+			return (-1);
+	}
+	else
+	{
+		if (lstat(path, &sb) == -1)
+			return (-1);
+	}
 
 	return (sb.st_mode & S_IFMT);
 }

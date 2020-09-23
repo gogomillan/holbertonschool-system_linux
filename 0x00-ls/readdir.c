@@ -20,7 +20,7 @@ char dirprnctrl = FALSE;		/* Colflow when print directory name & content */
 	while (*opts != NULL)					/* Set the options, if there are */
 		_format(*opts, PUT), opts++;
 
-	if (_format("r", GET) == EXIT_SUCCESS)
+	if (_format("r", GET) == EXIT_SUCCESS)	/* If -r then reverse order */
 		rbs(fils, NOCASE), rbs(dirs, NOCASE);
 
 	if (*fils != NULL)						/* If files, then print them */
@@ -105,9 +105,9 @@ struct stat sb;
  */
 int _prndir(char *dirs, char dirprnctrl)
 {
-char buff1[128], buff2[128], flag_1, flag_l, fpc, **fls, **tmp;
+char buff1[128], buff2[128], flag_1, flag_l, fpc, ***fls, **tmp;
 DIR *dir;									/* Structure to the directory */
-size_t t_fls;								/* Total files in a directory */
+size_t t_fls, t_drs;						/* Total files and dirs in a directory */
 
 	dir = opendir(dirs);						/* Open the dir */
 	if (dir == NULL)							/* Verify what happened */
@@ -119,10 +119,14 @@ size_t t_fls;								/* Total files in a directory */
 		printf("%s:\n", dirs);
 	closedir(dir);
 
-	flag_1 = _format("1", GET), flag_l = _format("l", GET);
-	fpc = FALSE, _dstat(dirs, W_INIT), t_fls = _dstat(dirs, N_FL);
-	fls = dtom(dirs, t_fls), tmp = fls;
-	while (*tmp != NULL)							/* For each file name */
+	flag_1 = _format("1", GET), flag_l = _format("l", GET);		/* flags -1 & -l */
+	fpc = FALSE, _dstat(dirs, W_INIT);						/* Creating dir stats */
+	t_fls = _dstat(dirs, N_FL), t_drs = _dstat(dirs, N_DI);		/* Getting stats */
+	fls = dtom(dirs, t_fls, t_drs);						/* Getting files from dir */
+	if (fls == NULL)
+		return (EXIT_FAILURE);
+	tmp = *fls;	/* Take the first element from fls, files of dir */
+	while (*tmp != NULL)				/* For each file name */
 	{
 		if (fpc)				/* File name sepparator */
 		{
@@ -132,18 +136,15 @@ size_t t_fls;								/* Total files in a directory */
 				printf("  ");	/* Separator for others    */
 		}
 		if (flag_l == EXIT_SUCCESS)
-			printf("%s", frmt_l(dirs, *tmp));
+			printf("%s", frmt_l(dirs, *tmp));	/* If -l */
 		else
-			printf("%s", *tmp);
+			printf("%s", *tmp);					/* Other case */
+		(flag_l == EXIT_SUCCESS) ? printf("%s", frmt_l(dirs, *tmp)) : printf("%s", *tmp);
 		fpc = TRUE, tmp++;
-	}													/* End while for dir */
+	}									/* End while for dir & move to next file */
 	if (fpc)
 		printf("\n");
-
-	tmp = fls;
-	while (*tmp != NULL)
-		free(*tmp++);
-	free(fls);
+	_freedp(*fls), _freedp(*(fls + 1)), free(fls);	/* Release memory from arrays*/
 	return (EXIT_SUCCESS);
 }
 

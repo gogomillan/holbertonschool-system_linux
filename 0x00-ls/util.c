@@ -123,46 +123,38 @@ int iter, w_ln, w_sz, w_ur, w_gr;
  */
 int _dstat(char *dirs, char stat)
 {
-static int w_link, w_usrs, w_grps, w_size, w_tmp, n_fl;	/* stats vars */
-char str[512], stru[256], flag_a, flag_A;						/* Buffers    */
-DIR *dir;							/* Structure to the directory  */
+static int st[8], w_tmp;						/* stats vars */
+char str[512], str_ug[256], fg_a, fg_A, fg_R;		/* Buffers    */
+DIR *dir;						/* Structure to the directory  */
 /**
  * stat - struct for file information
  */
 struct stat sb;
+
 	if (stat == W_INIT)
-	{	dir = opendir(dirs);							/* Open the dir			 */
-		flag_a = _format("a", GET), flag_A = _format("A", GET);
+	{
+		dir = opendir(dirs), st[N_FL] = 0, st[N_DI] = 0;				/* Open the dir			 */
+		fg_a = _format("a", GET), fg_A = _format("A", GET), fg_R = _format("R", GET);
 		while ((r_entry = readdir(dir)) != NULL)		/* For each dir entrance */
-			if ((flag_A == EXIT_SUCCESS &&	/* If opt A and not dir "." or ".." */
-				_strcmp(r_entry->d_name, ".", NOCASE) != 0 &&
-				_strcmp(r_entry->d_name, "..", NOCASE) != 0) ||
-				flag_a == EXIT_SUCCESS ||	/* Or option "a" is set             */
-				r_entry->d_name[0] != '.')	/* Or dir name starting without "." */
-			{	sprintf(str, "%s/%s%c", dirs, r_entry->d_name, '\0');
+			if ((fg_A == EXIT_SUCCESS && _strcmp(r_entry->d_name, ".", NOCASE) != 0 &&
+				_strcmp(r_entry->d_name, "..", NOCASE) != 0) ||	/* Opt A & no dir . or ..*/
+				fg_a == EXIT_SUCCESS || r_entry->d_name[0] != '.')	/* Opt a Or dirname */
+			{
+				sprintf(str, "%s/%s%c", dirs, r_entry->d_name, '\0');
 				if (lstat(str, &sb) == -1)	/* If the path has a problem */
 					continue;
-				w_link = ((int)sb.st_nlink > w_link) ? (int)sb.st_nlink : w_link;
-				w_size = ((int)sb.st_size > w_size) ? (int)sb.st_size : w_size;
-				w_tmp = _strlen(_guid(sb.st_uid, stru));
-				w_usrs = (w_tmp > w_usrs) ?  w_tmp : w_usrs;
-				w_tmp = _strlen(_ggid(sb.st_gid, stru));
-				w_grps = (w_tmp > w_grps) ?  w_tmp : w_grps;
-				n_fl++;
+				st[W_LN] = ((int)sb.st_nlink > st[W_LN]) ? (int)sb.st_nlink : st[W_LN];
+				st[W_SZ] = ((int)sb.st_size > st[W_SZ]) ? (int)sb.st_size : st[W_SZ];
+				w_tmp = _strlen(_guid(sb.st_uid, str_ug));
+				st[W_UR] = (w_tmp > st[W_UR]) ?  w_tmp : st[W_UR];
+				w_tmp = _strlen(_ggid(sb.st_gid, str_ug));
+				st[W_GR] = (w_tmp > st[W_GR]) ?  w_tmp : st[W_GR], st[N_FL]++;
+				if (fg_R == EXIT_SUCCESS)
+					st[N_DI] = ((sb.st_mode & S_IFMT) == S_IFDIR) ? st[N_DI] + 1 : st[N_DI];
 			}
-		w_link = intlen(w_link), w_size = intlen(w_size), closedir(dir);
+		st[W_LN] = intlen(st[W_LN]), st[W_SZ] = intlen(st[W_SZ]), closedir(dir);
 	}
-	if (stat == W_LN)
-		return (w_link);
-	if (stat == W_UR)
-		return (w_usrs);
-	if (stat == W_GR)
-		return (w_grps);
-	if (stat == W_SZ)
-		return (w_size);
-	if (stat == N_FL)
-		return (n_fl);
-	return (EXIT_SUCCESS);
+	return (st[(int)stat]);
 }
 
 /**

@@ -79,49 +79,50 @@ struct group *grp;
  *
  * @dirs: The path to the dir
  * @t_fls: Total files
+ * @t_drs: Total subdirectories
  *
  * Return: Pointer to the list of files ordered
  */
-char **dtom(char *dirs, size_t t_fls)
+char ***dtom(char *dirs, size_t t_fls, size_t t_drs)
 {
-char fg_a, fg_A, flag_r, flag_S, fg_t, **files, **tmp, **sizes, **size;
-DIR *dir;							/*  Structure to the directory */
-	if (_gmfiles(&files, &sizes, t_fls) == EXIT_FAILURE)			/* Get the memory*/
+char f_a, f_A, f_t, f_R, *dn, **fls, **fl, **szs, **sz, **ldrs, **ldr, ***ret;
+DIR *dir;				/*  Structure to the directory */
+	if (_gmfiles(&fls, &szs, t_fls, &ldrs, t_drs) == EXIT_FAILURE)	/* G mem */
 		return (NULL);
-	dir = opendir(dirs), tmp = files, size = sizes;				/* Open the dir			 */
-	fg_a = _format("a", GET), fg_A = _format("A", GET), fg_t = _format("t", GET);
+	f_a = _format("a", GET), f_A = _format("A", GET), f_t = _format("t", GET);
+	dir = opendir(dirs), fl = fls, sz = szs, ldr = ldrs, f_R = _format("R", GET);
 	while ((r_entry = readdir(dir)) != NULL)					/* For each dir entrance */
-		if ((fg_A == EXIT_SUCCESS &&				/* If opt A and not dir "." or ".." */
-			_strcmp(r_entry->d_name, ".", NOCASE) != 0 &&
-			_strcmp(r_entry->d_name, "..", NOCASE) != 0) ||
-			fg_a == EXIT_SUCCESS || r_entry->d_name[0] != '.')	/* Or opt a Or dirname */
+		if ((f_A == EXIT_SUCCESS && _strcmp(r_entry->d_name, ".", NOCASE) != 0 &&
+			_strcmp(r_entry->d_name, "..", NOCASE) != 0) ||	/* Opt A & no dir . or ..*/
+			f_a == EXIT_SUCCESS || r_entry->d_name[0] != '.') /* Or opt a Or dirname */
 		{
-			*tmp = malloc((_strlen(r_entry->d_name) + 2) * sizeof(char));
-			*size = malloc((20 + 2) * sizeof(char));
-			if (*tmp == NULL || *size == NULL)
+			dn = r_entry->d_name, *sz = malloc((20 + 2) * sizeof(char));	/* Memory */
+			*fl = malloc((_strlen(dn) + 2) * sizeof(char));					/* Please */
+			if (f_R == EXIT_SUCCESS && _isdir(dirs, dn) == S_IFDIR)	/* If -R & dir */
 			{
-				_freedp(files), _freedp(sizes);
+				*ldr = malloc((_strlen(dirs) +  _strlen(dn) + 3) * sizeof(char)); /*Mem*/
+				if (*ldr == NULL)
+				{	_freedp(fls), _freedp(szs), _freedp(ldrs);
+					return (NULL);
+				}
+				sprintf(*ldr, "%s%c", dn, '\0'), ldr++;
+			}
+			if (*fl == NULL || *sz == NULL) /* If no mem */
+			{	_freedp(fls), _freedp(szs), _freedp(ldrs);
 				return (NULL);
 			}
-			sprintf(*tmp, "%s%c", r_entry->d_name, '\0'), tmp++;
-			if (fg_t == EXIT_SUCCESS)
-				sprintf(*size, "%0*ld%c", 20, _gtime(dirs, r_entry->d_name), '\0');
-			else
-				sprintf(*size, "%0*d%c", 20, (int)_gsize(dirs, r_entry->d_name), '\0');
-			size++;
-		}
-	closedir(dir), flag_r = _format("r", GET), flag_S = _format("S", GET);
-	if (flag_r != EXIT_SUCCESS && flag_S == EXIT_SUCCESS)
-		bsdc(sizes, DES, files, ASC, NOCASE), _freedp(sizes);
-	else if (flag_r == EXIT_SUCCESS && flag_S == EXIT_SUCCESS)
-		bsdc(sizes, ASC, files, DES, NOCASE), _freedp(sizes);
-	else if (flag_r != EXIT_SUCCESS && fg_t == EXIT_SUCCESS)
-		bsdc(sizes, DES, files, DES, NOCASE), _freedp(sizes);
-	else if (flag_r == EXIT_SUCCESS && fg_t == EXIT_SUCCESS)
-		bsdc(sizes, ASC, files, ASC, NOCASE), _freedp(sizes);
-	else if (flag_r == EXIT_SUCCESS)
-		rbs(files, NOCASE), _freedp(sizes);
-	else
-		bsort(files, NOCASE), _freedp(sizes);
-	return (files);
+			sprintf(*fl, "%s%c", dn, '\0');
+			if (f_t == EXIT_SUCCESS)	/* If -t was set */
+				sprintf(*sz, "%0*ld%c", 20, _gtime(dirs, dn), '\0');
+			else						/* If not -t */
+				sprintf(*sz, "%0*d%c", 20, (int)_gsize(dirs, dn), '\0');
+			fl++, sz++;	/* Move pointers to store next file name and size */
+		}				 /* Close dir & Sort file list & Mem for return */
+	closedir(dir), _sfd(szs, fls, NOCASE), ret = malloc(2 * sizeof(char *));
+	if (ret == NULL)
+	{	_freedp(fls), _freedp(szs), _freedp(ldrs);
+		return (NULL);
+	}
+	_freedp(szs), *ret = fls, *(ret + 1) = ldrs; /* Release mem & return */
+	return (ret);
 }
