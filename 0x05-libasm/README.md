@@ -15,14 +15,14 @@
 - How to pass parameters to a function
 - How to retrieve parameters
 
-### Requirements \[ [:arrow_up:](#memo-heap-insert) \]
+### Requirements \[ [:arrow_up:](#memo-x86-assembly---libasm) \]
 - Linux Ubuntu 14.04 LTS
 - NASM version 2.10.09
 - gcc (Ubuntu 4.8.4-2ubuntu1~14.04.4) 4.8.4
 
 ### Tasks \[ [:arrow_up:](#memo-heap-insert) \]
 
-#### Task 0: strlen \[ [:arrow_up:](#memo-heap-insert) \]
+#### Task 0: strlen \[ [:arrow_up:](#memo-x86-assembly---libasm) \]
 Write a copycat of the function strlen(3), in x86-64 Assembly
 - Prototype when used in C: size\_t asm\_strlen(const char \*str);
 
