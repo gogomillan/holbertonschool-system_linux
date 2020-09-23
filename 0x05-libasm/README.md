@@ -3,6 +3,7 @@
 \[ [Concepts](#Concepts--arrow_up-) \]
 \[ [Requirements](#Requirements--arrow_up-) \]
 \[ [Tasks](#Tasks--arrow_up-) \]
+\[ [0](#Task-0-strlen--arrow_up-) \]
 
 ### Concepts \[ [:arrow_up:](#memo-x86-assembly---libasm) \]
 - The differences between Intel and AT&T syntaxes
