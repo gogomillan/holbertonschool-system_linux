@@ -16,7 +16,7 @@ asm_strlen:				; The symbol or function name label
 
 	mov rbx, rdi			; copy the argument(str) in rbx register
 	mov rcx, 0			; rcx register will be the iterator and starts in 0
-	jmp entry_i
+	jmp entry_i			; jump into this loop's part for the firt time
 
 iter_i:					; loop iter_i ->  while (*str != '\0')
 	inc rcx				; increment the iterator
