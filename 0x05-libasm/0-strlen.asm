@@ -14,7 +14,7 @@ asm_strlen:							; The symbol or function name label
 	push rbx						; save rbx value in stack
 	push rcx						; save rcx value in stack
 
-	mov rbx, rdi					; save the argument(str) in rbx register
+	mov rbx, rdi					; copy the argument(str) in rbx register
 	mov rcx, 0						; rcx register will be the iterator and starts in 0
 
 iter_i:								; loop iter_i ->  while (*str != '\0')
