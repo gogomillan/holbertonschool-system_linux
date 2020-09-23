@@ -16,6 +16,7 @@ asm_strcmp:				; The symbol or function label
 	push rcx			; save rcx value in stack
 	push rdx			; save rdx value in stack
 	push r8				; save r8 value in stack
+	push r9				; save r9 value in stack
 
 	mov rbx, rdi			; copy the argument(s1) to rbx register
 	mov rcx, rsi			; copy the argument(s2) to rcx register
@@ -28,10 +29,11 @@ entry_i:				; this entry point avoid the first time increment
 	mov r8b, byte [rcx + rdx]	; check if the char in s1
 	cmp r8b, byte 0x00		; is not a null char
 	je finally_i			; if it is go out of for loop
-	mov r8b, byte [rbx + rdx]	; check if the char in s2
-	cmp r8b, byte 0x00		; is not a null char
+	mov r9b, byte [rbx + rdx]	; check if the char in s2
+	cmp r9b, byte 0x00		; is not a null char
 	je finally_i			; if it is go out of for loop
-	cmp r8b, byte [rcx + rdx]	; check if char in s1 is eql to char in s2
+	; cmp r9b, byte [rcx + rdx]	; check if char in s1 is eql to char in s2
+	cmp r9b, r8b			; check if char in s1 is eql to char in s2
 	je iter_i			; if it is, continue in the for loop
 
 finally_i:				; finally lopp
@@ -42,6 +44,10 @@ finally_i:				; finally lopp
 	mov rcx, 0			; set the reg to 0
 	mov bl, byte [rsp + 8]		; set the last char value s1 in a variable
 	mov cl, byte [rsp]		; set the last char value s2 in a variable
+	; mov rbx, 0			; set the reg to 0
+	; mov rcx, 0			; set the reg to 0
+	; mov bl, byte [rbx + rdx]	; set the last char value s1 in a variable
+	; mov cl, byte [rcx + rdx]	; set the last char value s2 in a variable
 	cmp rbx, rcx			; compare the previous variables
 	je ret_eq			; if are the same set return value to 0
 	jl ret_lt			; if rbx is less than rcx set the return value to -1
@@ -61,6 +67,7 @@ ret_gt:					; set the return value to 1
 
 end_func:
 					; restore registers for the caller
+	pop r9				; restore r9 from stack
 	pop r8				; restore r8 from stack
 	pop rdx				; restore rdx from stack
 	pop rcx				; restore rcx from stack
