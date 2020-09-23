@@ -20,7 +20,7 @@
 - NASM version 2.10.09
 - gcc (Ubuntu 4.8.4-2ubuntu1~14.04.4) 4.8.4
 
-### Tasks \[ [:arrow_up:](#memo-heap-insert) \]
+### Tasks \[ [:arrow_up:](#memo-x86-assembly---libasm) \]
 
 #### Task 0: strlen \[ [:arrow_up:](#memo-x86-assembly---libasm) \]
 Write a copycat of the function strlen(3), in x86-64 Assembly
