@@ -10,7 +10,7 @@
 asm_strlen:				; The symbol or function name label
 	push rbp			; prologue
 	mov rbp, rsp
-
+					; save registers posibly used by the caller
 	push rbx			; save rbx value in stack
 	push rcx			; save rcx value in stack
 
@@ -20,13 +20,13 @@ asm_strlen:				; The symbol or function name label
 
 iter_i:					; loop iter_i ->  while (*str != '\0')
 	inc rcx				; increment the iterator
-entry_i:
+entry_i:				; this entry point avoid the first time increment
 	cmp byte [rbx + rcx ], 0x00	; compare character of iterator position with caracter null
 	jne iter_i			; if not null jump loop
 
 end:
 	mov rax, rcx			; set the lenght in the return register
-
+					; restore registers for the caller
 	pop rcx				; restore rcx register from stack
 	pop rbx				; restore rbx register from stack
 
