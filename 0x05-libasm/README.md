@@ -4,7 +4,7 @@
 \[ [Requirements](#Requirements--arrow_up-) \]
 \[ [Tasks](#Tasks--arrow_up-) \]
 
-### Concepts \[ [:arrow_up:](#memo-heap-insert) \]
+### Concepts \[ [:arrow_up:](#memo-x86-assembly---libasm) \]
 - The differences between Intel and AT&T syntaxes
 - The different x86 GPR
 - The different flag registers
