@@ -32,7 +32,6 @@ entry_i:				; this entry point avoid the first time increment
 	mov r9b, byte [rbx + rdx]	; check if the char in s2
 	cmp r9b, byte 0x00		; is not a null char
 	je finally_i			; if it is go out of for loop
-	; cmp r9b, byte [rcx + rdx]	; check if char in s1 is eql to char in s2
 	cmp r9b, r8b			; check if char in s1 is eql to char in s2
 	je iter_i			; if it is, continue in the for loop
 
@@ -44,10 +43,6 @@ finally_i:				; finally lopp
 	mov rcx, 0			; set the reg to 0
 	mov bl, byte [rsp + 8]		; set the last char value s1 in a variable
 	mov cl, byte [rsp]		; set the last char value s2 in a variable
-	; mov rbx, 0			; set the reg to 0
-	; mov rcx, 0			; set the reg to 0
-	; mov bl, byte [rbx + rdx]	; set the last char value s1 in a variable
-	; mov cl, byte [rcx + rdx]	; set the last char value s2 in a variable
 	cmp rbx, rcx			; compare the previous variables
 	je ret_eq			; if are the same set return value to 0
 	jl ret_lt			; if rbx is less than rcx set the return value to -1
