@@ -4,6 +4,7 @@
 \[ [Requirements](#Requirements--arrow_up-) \]
 \[ [Tasks](#Tasks--arrow_up-) \]
 \[ [0](#Task-0-handle-signal--arrow_up-) \]
+\[ [1](#Task-1-current-handler-signal--arrow_up-) \]
 
 ### Concepts \[ [:arrow_up:](#memo-c---signals) \]
 - What is a signal
@@ -82,5 +83,74 @@ alex@~/0x06-signals$
 ```
 **File:**
 \[ [0-handle_signal.c](0-handle_signal.c) \]
+
+#### Task 1: Current handler - signal \[ [:arrow_up:](#memo-c---signals) \]
+Write a function that retrieves the current handler of the signal SIGINT
+- Prototype: void (\*current_handler_signal(void))(int);
+- Your function returns a pointer to the current handler of SIGINT, or NULL on
+failure
+- You are not allowed to use sigaction(2)
+- The handler must be unchanged after calling your function
+
+**Example:**
+```bash
+alex@~/0x06-signals$ cat 1-main.c 
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+
+#include "signals.h"
+
+/* Our functions */
+void print_hello(int);
+void set_print_hello(void);
+
+/**
+ * main - Entry point
+ *
+ * Return: EXIT_SUCCESS or EXIT_FAILURE
+ */
+int main(void)
+{
+    void (*handler)(int);
+    int i;
+
+    handler = current_handler_signal();
+    printf("Address of the current handler: %#lx\n", (unsigned long int)handler);
+
+    /* Set 'print_hello()` as the handler for SIGINT */
+    set_print_hello();
+
+    handler = current_handler_signal();
+    printf("Address of the 'print_hello' function: %#lx\n", (unsigned long int)&print_hello);
+    printf("Address of the current handler: %#lx\n", (unsigned long int)handler);
+
+    for (i = 0; ; i++)
+    {
+        printf("[%d] Wait for it ...\n", i);
+        sleep(1);
+    }
+    return (EXIT_SUCCESS);
+}
+alex@~/0x06-signals$ gcc -Wall -Wextra -Werror -pedantic 1-main.c 1-set_print_hello.c 1-current_handler_signal.c -o 1-current_handler_signal
+alex@~/0x06-signals$ ./1-current_handler_signal
+Address of the current handler: 0
+Address of the 'print_hello' function: 0x4006da
+Address of the current handler: 0x4006da
+[0] Wait for it ...
+[1] Wait for it ...
+^CHello :)
+[2] Wait for it ...
+^CHello :)
+[3] Wait for it ...
+[4] Wait for it ...
+^CHello :)
+[5] Wait for it ...
+^\Quit (core dumped)
+alex@~/0x06-signals$
+```
+**File:**
+\[ [1-current_handler_signal.c](1-current_handler_signal.c) \]
+
 
 \[ [Back](../../..#readme) \] \[ [:arrow_up:](#memo-c---signals) \]
