@@ -4,7 +4,7 @@
 \[ [Requirements](#Requirements--arrow_up-) \]
 \[ [Tasks](#Tasks--arrow_up-) \]
 \[ [0](#Task-0-handle-signal--arrow_up-) \]
-\[ [1](#Task-1-current-handler-signal--arrow_up-) \]
+\[ [1](#Task-1-current-handler---signal--arrow_up-) \]
 
 ### Concepts \[ [:arrow_up:](#memo-c---signals) \]
 - What is a signal
