@@ -7,6 +7,7 @@ System programming &amp; Algorithms - Linux Programming
 - :bookmark_tabs: [0x03-proc_filesystem](0x03-proc_filesystem/.#readme)
 - :bookmark_tabs: [0x04-readelf](0x04-readelf/.#readme)
 - :bookmark_tabs: [0x05-libasm](0x05-libasm/.#readme)
+- :bookmark_tabs: [0x06-signals](0x06-signals/.#readme)
 
 ## :sunglasses: Author
 Gonzalo Gomez Millan  
