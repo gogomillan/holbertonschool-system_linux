@@ -19,5 +19,5 @@ int handle_signal(void)
  */
 void hdl_ctrl_c(int signal)
 {
-	printf("Gotcha! [<%d>]\n", signal);
+	printf("Gotcha! [%d]\n", signal);
 }
