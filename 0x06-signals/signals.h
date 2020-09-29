@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <string.h>
+#include <unistd.h>
 
 int handle_signal(void);
 void hdl_ctrl_c(int signal);
