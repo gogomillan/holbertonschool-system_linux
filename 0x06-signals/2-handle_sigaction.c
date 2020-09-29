@@ -10,7 +10,7 @@ int handle_sigaction(void)
 
 	/* Set up the structure to specify the new action. */
 	act.sa_handler = hdl_ctrl_c;
-	sigemptyset (&act.sa_mask);
+	sigemptyset(&act.sa_mask);
 	act.sa_flags = 0;
 
 	/* Set the handler sor SIGINT or CTRL-C */
