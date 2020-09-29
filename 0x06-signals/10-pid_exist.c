@@ -7,7 +7,5 @@
 */
 int pid_exist(pid_t pid)
 {
-	if (kill(pid, 0) == 0)
-		return (1);
-	return (0);
+	return ((kill(pid, 0) == 0) ? 1 : 0);
 }
