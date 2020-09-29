@@ -6,6 +6,7 @@
 #include <signal.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/types.h>
 
 int handle_signal(void);
 void hdl_ctrl_c(int signal);
@@ -14,5 +15,6 @@ int handle_sigaction(void);
 void (*current_handler_sigaction(void))(int);
 int trace_signal_sender(void);
 void hdl_sender(int sig, siginfo_t *siginfo, void *context);
+int pid_exist(pid_t pid);
 
 #endif  /* gogomillan */
