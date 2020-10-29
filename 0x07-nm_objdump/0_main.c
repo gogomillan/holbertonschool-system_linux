@@ -11,7 +11,7 @@
  */
 int main(int argc, char **argv, char **env)
 {
-	char *av[] = {"./nhm", "-p", "", NULL};
+	char *av[] = {"./hnm", "-p", "", NULL};
 
 	(void)argc;
 	av[2] = argv[1];
