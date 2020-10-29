@@ -11,7 +11,7 @@
  */
 int main(int argc, char **argv, char **env)
 {
-	char *av[] = {"/usr/bin/objdump", "-sf", "", NULL};
+	char *av[] = {"./hobjdump", "-sf", "", NULL};
 
 	(void)argc;
 	av[2] = argv[1];
