@@ -109,7 +109,10 @@ int main(int argc, char *const argv[], char *const envp[])
 	pid_t child_pid;
 
 	if (argc < 2)
+	{
 		printf("Usage: %s command [args...]\n", argv[0]);
+		return (EXIT_FAILURE);
+	}
 	else
 	{
 		child_pid = fork();
