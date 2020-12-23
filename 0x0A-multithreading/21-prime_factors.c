@@ -31,5 +31,5 @@ list_t *prime_factors(char const *s)
 		}
 	}
 	list_add(factors, (void *)num);
-	return(factors);
+	return (factors);
 }
