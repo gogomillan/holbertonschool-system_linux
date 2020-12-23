@@ -1,35 +1,70 @@
 #include "multithreading.h"
-#include "list.h"
 
 /**
- * prime_factors - factorizes a number into a list of prime factors
- * @s: string representation of the number to factorize
- * Return: pointer to head of doubly-linked list of prime factors
- */
+* primeFactors - built the list of prime factors
+* @n: number to get the prime factors
+* @l: the list of prime factors
+* Return: Nothing
+*/
+void primeFactors(unsigned long n, list_t *l)
+{
+	unsigned long i = 0, *prime = NULL;
+
+	while (n % 2 == 0)
+	{
+		prime = calloc(1, sizeof(unsigned long));
+		*prime = 2;
+		list_add(l, prime);
+		n /= 2;
+	}
+
+	i = 3;
+	while (i * i <= n)
+	{
+		while (n % i == 0)
+		{
+			prime = calloc(1, sizeof(unsigned long));
+			*prime = i;
+			list_add(l, prime);
+			n /= i;
+		}
+		i += 2;
+	}
+
+	if (n > 2)
+	{
+		prime = calloc(1, sizeof(unsigned long));
+		*prime = n;
+		list_add(l, prime);
+	}
+}
+
+/**
+* prime_factors - get the prime factor of a given number
+* @s: string representation of a number
+* Return: a list of prime factor of a given number
+*/
 list_t *prime_factors(char const *s)
 {
-	unsigned long x;
-	unsigned long num = 0;
-	list_t *factors;
+	unsigned long n = 0;
+	int i = 0;
+	list_t *list_prime = NULL;
 
-	if (!s)
+	list_prime = calloc(1, sizeof(list_t));
+	if (!list_prime)
 		return (NULL);
 
-	factors = calloc(1, sizeof(list_t));
-	if (!factors)
-		return (NULL);
+	list_init(list_prime);
 
-	num = strtoul(s, NULL, 10);
-
-	printf("[%lu]\n", num);
-
-	for (x = 2; x < num; x++)
+	i = 0;
+	n = 0;
+	while (s[i])
 	{
-		while ((num % x) == 0)
-		{
-			num = num / x;
-		}
+		n = (n * 10) + (s[i] - '0');
+		i++;
 	}
-	list_add(factors, (void *)num);
-	return (factors);
+
+	primeFactors(n, list_prime);
+
+	return (list_prime);
 }
