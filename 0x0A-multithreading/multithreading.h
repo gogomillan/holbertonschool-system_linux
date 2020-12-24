@@ -7,8 +7,11 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <pthread.h>
+#include <sys/sysinfo.h>
 #include "list.h"
 #include "pool_threading.h"
+
+#define NUM_THREADS get_nprocs()
 
 /**
  * struct pixel_s - RGB pixel
